@@ -1,0 +1,38 @@
+spring:
+  jpa:
+    hibernate:
+      #      ddl-auto: create
+      ddl-auto: update
+    properties:
+      properties:
+        show_sql: true # DDL 출력
+        format_sql: true # SQL 을 보기 좋게 출력
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: admin
+    password: admincody
+    url: jdbc:mysql://cody.cf54bs5i8vlt.ap-northeast-2.rds.amazonaws.com:3306/cody
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /v1/**
