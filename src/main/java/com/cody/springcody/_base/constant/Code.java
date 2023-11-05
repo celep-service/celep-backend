@@ -17,11 +17,16 @@ public enum Code {
 
     // User
     NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "User not found"),
+    EMPTY_EMAIL(3002, HttpStatus.BAD_REQUEST, "Email is empty"),
+    EMPTY_NAME(3003, HttpStatus.BAD_REQUEST, "Name is empty"),
+    ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "Already exists user"),
+    EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
+    EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
 
 
     // Clothes
     NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),
-    
+
     INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     ;
 

@@ -21,3 +21,14 @@ Content-Type: application/json
   "password": "chang",
   "gender": "MALE"
 }
+
+###
+# 잘못된 요청
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Doe",
+  "password": "chang",
+  "gender": "MALE"
+}
