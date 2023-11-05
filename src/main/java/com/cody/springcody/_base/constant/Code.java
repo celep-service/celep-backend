@@ -15,9 +15,13 @@ public enum Code {
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
     VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
 
-    TRANSACTION_NOT_FOUND(3001, HttpStatus.BAD_REQUEST, "해당 인덱스의 거래내역이 없습니다."),
-    ACCOUNT_TRANSACTION_NOT_FOUND(3002, HttpStatus.BAD_REQUEST, "해당 계좌의 거래내역이 없습니다."),
+    // User
+    NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "User not found"),
 
+
+    // Clothes
+    NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),
+    
     INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     ;
 
