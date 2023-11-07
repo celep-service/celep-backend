@@ -7,8 +7,9 @@ Content-Type: application/json
   "brand": "guzzi",
   "gender": "MALE",
   "imageUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone",
-  "clothes_category": "TOP",
-  "name": "ABC"
+  "clothesCategory": "TOP",
+  "name": "ABC",
+  "sellUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone"
 }
 
 ###
@@ -20,6 +21,6 @@ Content-Type: application/json
   "brand": "hazzi",
   "gender": "MALE",
   "imageUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone",
-  "clothes_category": "TOP",
+  "clothesCategory": "BOTTOM",
   "name": "EFD"
 }
