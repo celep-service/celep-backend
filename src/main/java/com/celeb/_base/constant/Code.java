@@ -24,7 +24,7 @@ public enum Code {
     EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
 
     // Influencer
-    NOT_FOUND_INFLUENCER(4001, HttpStatus.NOT_FOUND, "Influencer not found"),
+    NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "CELEB not found"),
 
 
     // Clothes

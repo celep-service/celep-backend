@@ -1,14 +1,14 @@
 package com.celeb.post;
 
 import com.celeb._base.constant.Code;
-import com.celeb.celeb.CelebRepository;
-import com.celeb.user.UserRepository;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.celeb.CelebRepository;
 import com.celeb.clothes.Clothes;
 import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
+import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +40,8 @@ public class PostService {
                 new GeneralException(Code.NOT_FOUND_USER)));
 
         postDto.setCeleb(
-            celebRepository.findById(postDto.getInfluencerId()).orElseThrow(() ->
-                new GeneralException(Code.NOT_FOUND_INFLUENCER)));
+            celebRepository.findById(postDto.getCelebId()).orElseThrow(() ->
+                new GeneralException(Code.NOT_FOUND_CELEB)));
 
         Post post = postDto.toEntity();
 

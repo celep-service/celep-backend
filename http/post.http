@@ -17,5 +17,5 @@ Content-Type: application/json
   ],
   "userId": 1,
   "imageUrl": "naver.com",
-  "influencerId": 1
+  "celebId": 1
 }

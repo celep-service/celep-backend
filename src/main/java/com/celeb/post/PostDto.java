@@ -1,9 +1,9 @@
 package com.celeb.post;
 
 import com.celeb.celeb.Celeb;
-import com.celeb.user.User;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyDto;
+import com.celeb.user.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ public class PostDto {
     private Integer userId;
 
     // post시 influencerId를 받아서 저장하기 위한 변수
-    private Integer influencerId;
+    private Integer celebId;
 
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
