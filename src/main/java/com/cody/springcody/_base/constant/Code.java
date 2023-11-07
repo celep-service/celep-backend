@@ -23,6 +23,9 @@ public enum Code {
     EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
     EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
 
+    // Influencer
+    NOT_FOUND_INFLUENCER(4001, HttpStatus.NOT_FOUND, "Influencer not found"),
+
 
     // Clothes
     NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),

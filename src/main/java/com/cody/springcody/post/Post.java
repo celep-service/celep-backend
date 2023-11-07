@@ -2,6 +2,7 @@ package com.cody.springcody.post;
 
 
 import com.cody.springcody._base.entity.BaseTimeEntity;
+import com.cody.springcody.celeb.Celeb;
 import com.cody.springcody.cody.Cody;
 import com.cody.springcody.comment.Comment;
 import com.cody.springcody.user.User;
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,10 +40,13 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Cody> codies;
 
+    @OneToOne
+    private Celeb celeb;
+
 
     @Builder
     public Post(Integer id, String title, String content, String status, String imageUrl,
-        User user, List<Cody> codies) {
+        User user, List<Cody> codies, Celeb celeb) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -49,6 +54,7 @@ public class Post extends BaseTimeEntity {
         this.imageUrl = imageUrl;
         this.user = user;
         this.codies = codies;
+        this.celeb = celeb;
     }
 
 

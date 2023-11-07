@@ -2,6 +2,7 @@ package com.cody.springcody.post;
 
 import com.cody.springcody._base.constant.Code;
 import com.cody.springcody._base.exception.GeneralException;
+import com.cody.springcody.celeb.CelebRepository;
 import com.cody.springcody.clothes.Clothes;
 import com.cody.springcody.clothes.ClothesRepository;
 import com.cody.springcody.cody.Cody;
@@ -24,6 +25,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final ClothesRepository clothesRepository;
     private final CodyService codyService;
+    private final CelebRepository celebRepository;
 
     public List<PostDto> getPosts() {
         List<Post> postList = postRepository.findAll();
@@ -37,13 +39,15 @@ public class PostService {
             userRepository.findById(postDto.getUserId()).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));
 
+        postDto.setCeleb(
+            celebRepository.findById(postDto.getInfluencerId()).orElseThrow(() ->
+                new GeneralException(Code.NOT_FOUND_INFLUENCER)));
+
         Post post = postDto.toEntity();
 
         // 우선 post를 저장해야 id가 생기므로
         // post를 저장하고 id를 가져와서 cody에 저장해야함
         Post savedPost = postRepository.save(post);
-
-        System.out.println("workd");
 
         // clothesIdList -> cody에 등록하고 엔티티 리턴 필요
 

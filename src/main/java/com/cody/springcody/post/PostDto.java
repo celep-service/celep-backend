@@ -1,5 +1,6 @@
 package com.cody.springcody.post;
 
+import com.cody.springcody.celeb.Celeb;
 import com.cody.springcody.cody.Cody;
 import com.cody.springcody.cody.CodyDto;
 import com.cody.springcody.user.User;
@@ -25,12 +26,16 @@ public class PostDto {
     private LocalDateTime updatedAt;
     private List<Cody> codies;
     private User user;
+    private Celeb celeb;
 
     // post시 clothesId를 받아서 저장하기 위한 변수
     private List<Integer> clothesIdList;
 
     // post시 userId를 받아서 저장하기 위한 변수
     private Integer userId;
+
+    // post시 influencerId를 받아서 저장하기 위한 변수
+    private Integer influencerId;
 
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
@@ -44,6 +49,7 @@ public class PostDto {
 
     public static PostDto postResponse(Post post) {
         List<CodyDto> codiesDtoList = CodyDto.codyListResponse(post.getCodies());
+//        Influencer influencer = ;
 
         return PostDto.builder()
             .id(post.getId())

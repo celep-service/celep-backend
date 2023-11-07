@@ -1,4 +1,4 @@
-package com.cody.springcody.influencer;
+package com.cody.springcody.celeb;
 
 import com.cody.springcody._base.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Influencer extends BaseTimeEntity {
+public class Celeb extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +22,13 @@ public class Influencer extends BaseTimeEntity {
     private String name;
     private String imageUrl;
     @Enumerated(EnumType.STRING)
-    private InfluencerCategoryEnum influencerCategory;
+    private CelebCategoryEnum celebCategory;
 
     @Builder
-    public Influencer(String name, String imageUrl, InfluencerCategoryEnum influencerCategory) {
+    public Celeb(String name, String imageUrl, CelebCategoryEnum celebCategory) {
         this.name = name;
         this.imageUrl = imageUrl;
-        this.influencerCategory = influencerCategory;
+        this.celebCategory = celebCategory;
     }
 
 }

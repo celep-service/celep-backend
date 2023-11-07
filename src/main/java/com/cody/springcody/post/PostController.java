@@ -17,14 +17,11 @@ public class PostController {
 
     @GetMapping("")
     public DataResponseDto<Object> getPosts() {
-
-        System.out.println("it workd");
         return DataResponseDto.of(postService.getPosts());
     }
 
     @PostMapping("")
     public DataResponseDto<Object> createPost(@RequestBody PostDto postDto) {
-        System.out.println(postDto.toString());
         return DataResponseDto.of(postService.createPost(postDto));
     }
 

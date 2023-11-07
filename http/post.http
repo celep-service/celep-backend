@@ -16,5 +16,6 @@ Content-Type: application/json
     2
   ],
   "userId": 1,
-  "imageUrl": "naver.com"
+  "imageUrl": "naver.com",
+  "influencerId": 1
 }
