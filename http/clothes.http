@@ -24,3 +24,7 @@ Content-Type: application/json
   "clothesCategory": "BOTTOM",
   "name": "EFD"
 }
+
+
+###
+GET localhost:8080/clothes

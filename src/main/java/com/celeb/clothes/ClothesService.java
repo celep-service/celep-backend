@@ -2,6 +2,7 @@ package com.celeb.clothes;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,9 @@ public class ClothesService {
         }
 
         return clothesRepository.save(clothes);
+    }
+
+    public List<Clothes> getClothesList() {
+        return clothesRepository.findAll();
     }
 }

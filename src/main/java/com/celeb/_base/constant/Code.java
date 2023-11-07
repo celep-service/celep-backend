@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum Code {
-    OK(0, HttpStatus.OK, "Ok"),
+    OK(200, HttpStatus.OK, "OK"),
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
     VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
 

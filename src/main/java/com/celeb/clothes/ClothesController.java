@@ -2,6 +2,7 @@ package com.celeb.clothes;
 
 import com.celeb._base.dto.DataResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,14 @@ public class ClothesController {
 
 
     @PostMapping("")
-    public DataResponseDto<Object> createPost(@RequestBody ClothesDto clothesDto) {
+    public DataResponseDto<Object> createClothes(@RequestBody ClothesDto clothesDto) {
         return DataResponseDto.of(clothesService.createClothes(clothesDto));
+    }
+
+
+    @GetMapping("")
+    public DataResponseDto<Object> getClothesList() {
+        return DataResponseDto.of(clothesService.getClothesList());
     }
 
 
