@@ -1,0 +1,21 @@
+###
+
+GET localhost:8080/posts
+
+
+###
+
+POST localhost:8080/posts
+Content-Type: application/json
+
+{
+  "title": "My first post",
+  "content": "This is my first post",
+  "clothesIdList": [
+    1,
+    2
+  ],
+  "userId": 1,
+  "imageUrl": "naver.com",
+  "influencerId": 1
+}

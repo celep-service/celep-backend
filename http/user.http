@@ -1,0 +1,34 @@
+###
+
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "John",
+  "email": "pch3310@gmail.com",
+  "password": "chang",
+  "gender": "MALE"
+}
+
+###
+
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Doe",
+  "email": "plg3320@naver.com",
+  "password": "chang",
+  "gender": "MALE"
+}
+
+###
+# 잘못된 요청
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Doe",
+  "password": "chang",
+  "gender": "MALE"
+}ㄷㄱ

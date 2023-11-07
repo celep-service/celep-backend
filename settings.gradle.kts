@@ -1,1 +1,1 @@
-rootProject.name = "spring-cody"
+rootProject.name = "celep"
