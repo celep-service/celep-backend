@@ -7,8 +7,9 @@ Content-Type: application/json
   "brand": "guzzi",
   "gender": "MALE",
   "imageUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone",
-  "clothes_category": "TOP",
-  "name": "ABC"
+  "clothesCategory": "TOP",
+  "name": "ABC",
+  "sellUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone"
 }
 
 ###
@@ -20,6 +21,19 @@ Content-Type: application/json
   "brand": "hazzi",
   "gender": "MALE",
   "imageUrl": "https://www.guzzi.com/it_IT/heritage/v7-iii/v7-iii-stone",
-  "clothes_category": "TOP",
-  "name": "EFD"
+  "clothesCategory": "BOTTOM",
+  "name": "11월일에 만든"
 }
+
+
+###
+# 단순 조회
+GET localhost:8080/clothes
+
+###
+# 사이즈 조정
+GET localhost:8080/clothes?size=100
+
+###
+# celebCategory 추가
+GET localhost:8080/clothes?celebCategory=BOTTOM

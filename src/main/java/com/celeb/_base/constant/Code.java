@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum Code {
-    OK(0, HttpStatus.OK, "Ok"),
+    OK(200, HttpStatus.OK, "OK"),
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
     VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
 
@@ -29,6 +29,7 @@ public enum Code {
 
     // Clothes
     NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),
+    ERROR_UPLOAD_CLOTHES(4002, HttpStatus.BAD_REQUEST, "Error upload clothes"),
 
     INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     ;
