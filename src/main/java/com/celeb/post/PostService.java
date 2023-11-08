@@ -33,7 +33,7 @@ public class PostService {
     }
 
     @Transactional
-    public String createPost(PostDto postDto) {
+    public PostDto createPost(PostDto postDto) {
 
         postDto.setUser(
             userRepository.findById(postDto.getUserId()).orElseThrow(() ->
@@ -64,6 +64,9 @@ public class PostService {
 
         postRepository.save(postDto.toEntity());
 
-        return "포스트 생성 완료";
+        PostDto returnPostDto = new PostDto();
+        returnPostDto.setId(savedPost.getId());
+
+        return returnPostDto;
     }
 }

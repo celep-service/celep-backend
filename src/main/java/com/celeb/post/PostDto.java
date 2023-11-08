@@ -40,6 +40,10 @@ public class PostDto {
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
 
+    public PostDto() {
+        
+    }
+
     public static List<PostDto> postListResponse(
         List<Post> posts) {
         return posts.stream()
