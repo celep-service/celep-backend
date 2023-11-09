@@ -60,9 +60,7 @@ public class PostService {
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
 
-        postDto.setCodies(codyList);
-
-        postRepository.save(postDto.toEntity());
+        savedPost.setCodies(codyList);
 
         PostDto returnPostDto = new PostDto();
         returnPostDto.setId(savedPost.getId());
