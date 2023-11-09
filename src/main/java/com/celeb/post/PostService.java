@@ -31,7 +31,13 @@ public class PostService {
     private final CelebRepository celebRepository;
 
     public Slice<PostDto> getPosts(Pageable pageable,
-        String celebCategory, String search) {
+        String celebCategory, String search, Integer userId) {
+
+        // userId는 타 검색 조건과 함께 사용할 수 없음
+        if (userId != null) {
+            return PostDto.postListResponse(
+                postRepository.findAllByUser_Id(userId, pageable));
+        }
 
         if (search != null && celebCategory != null) {
             return PostDto.postListResponse(

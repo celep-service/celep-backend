@@ -21,8 +21,8 @@ public class PostController {
     @GetMapping("")
     public DataResponseDto<Object> getPosts(
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-        String celebCategory, String search) {
-        return DataResponseDto.of(postService.getPosts(pageable, celebCategory, search));
+        String celebCategory, String search, Integer userId) {
+        return DataResponseDto.of(postService.getPosts(pageable, celebCategory, search, userId));
     }
 
     @PostMapping("")

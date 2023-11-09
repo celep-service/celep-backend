@@ -16,7 +16,12 @@ GET localhost:8080/posts?search=이승기
 
 ###
 
-GET localhost:8080/posts?search=이승기&celebCategory=SINGER
+GET localhost:8080/posts?search=이승기&celebCategory=ACTOR
+
+
+###
+
+GET localhost:8080/posts?userId=2
 
 ###
 
@@ -24,13 +29,13 @@ POST localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "새로운33",
+  "title": "유저아이디2",
   "content": "진짜..",
   "clothesIdList": [
     1,
     2
   ],
-  "userId": 1,
+  "userId": 2,
   "imageUrl": "naver.com",
   "celebId": 5
 }

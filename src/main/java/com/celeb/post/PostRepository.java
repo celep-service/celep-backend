@@ -21,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
             + "and p.celeb.celebCategory = :celebCategory")
     Slice<Post> findAllByContentContainingAndCeleb_CelebCategory(String search,
         CelebCategoryEnum celebCategory, Pageable pageable);
+
+    Slice<Post> findAllByUser_Id(Integer userId, Pageable pageable);
 }
