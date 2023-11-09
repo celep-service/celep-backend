@@ -2,6 +2,9 @@ package com.celeb.post;
 
 import com.celeb._base.dto.DataResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +19,10 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public DataResponseDto<Object> getPosts() {
-        return DataResponseDto.of(postService.getPosts());
+    public DataResponseDto<Object> getPosts(
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+        String celebCategory, String search, Integer userId) {
+        return DataResponseDto.of(postService.getPosts(pageable, celebCategory, search, userId));
     }
 
     @PostMapping("")

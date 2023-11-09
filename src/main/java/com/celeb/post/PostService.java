@@ -2,6 +2,7 @@ package com.celeb.post;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
 import com.celeb.clothes.Clothes;
 import com.celeb.clothes.ClothesRepository;
@@ -12,6 +13,8 @@ import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,13 +30,38 @@ public class PostService {
     private final CodyService codyService;
     private final CelebRepository celebRepository;
 
-    public List<PostDto> getPosts() {
-        List<Post> postList = postRepository.findAll();
+    public Slice<PostDto> getPosts(Pageable pageable,
+        String celebCategory, String search, Integer userId) {
+
+        // userId는 타 검색 조건과 함께 사용할 수 없음
+        if (userId != null) {
+            return PostDto.postListResponse(
+                postRepository.findAllByUser_Id(userId, pageable));
+        }
+
+        if (search != null && celebCategory != null) {
+            return PostDto.postListResponse(
+                postRepository.findAllByContentContainingAndCeleb_CelebCategory(
+                    search, CelebCategoryEnum.valueOf(celebCategory), pageable));
+        }
+
+        if (celebCategory != null) {
+            return PostDto.postListResponse(
+                postRepository.findAllByCeleb_CelebCategory(
+                    CelebCategoryEnum.valueOf(celebCategory), pageable));
+        }
+
+        if (search != null) {
+            return PostDto.postListResponse(
+                postRepository.findAllByContentContaining(search, pageable));
+        }
+
+        Slice<Post> postList = postRepository.findAll(pageable);
         return PostDto.postListResponse(postList);
     }
 
     @Transactional
-    public String createPost(PostDto postDto) {
+    public PostDto createPost(PostDto postDto) {
 
         postDto.setUser(
             userRepository.findById(postDto.getUserId()).orElseThrow(() ->
@@ -60,10 +88,11 @@ public class PostService {
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
 
-        postDto.setCodies(codyList);
+        savedPost.setCodies(codyList);
 
-        postRepository.save(postDto.toEntity());
+        PostDto returnPostDto = new PostDto();
+        returnPostDto.setId(savedPost.getId());
 
-        return "포스트 생성 완료";
+        return returnPostDto;
     }
 }

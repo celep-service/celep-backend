@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Slice;
 
 @Data
 @Builder
@@ -40,11 +41,16 @@ public class PostDto {
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
 
-    public static List<PostDto> postListResponse(
-        List<Post> posts) {
-        return posts.stream()
-            .map(PostDto::postResponse)
-            .toList();
+    public PostDto() {
+
+    }
+
+    public static Slice<PostDto> postListResponse(
+        Slice<Post> posts) {
+//        return posts.stream()
+//            .map(PostDto::postResponse)
+//            .toList();
+        return posts.map(PostDto::postResponse);
     }
 
     public static PostDto postResponse(Post post) {
@@ -60,6 +66,7 @@ public class PostDto {
             .createdAt(post.getCreatedAt())
             .updatedAt(post.getUpdatedAt())
             .codiesDtoList(codiesDtoList)
+            .celeb(post.getCeleb())
             .build();
     }
 
@@ -70,6 +77,8 @@ public class PostDto {
             .content(content)
             .status(status)
             .imageUrl(imageUrl)
+            .celeb(celeb)
+            .user(user)
             .build();
     }
 
