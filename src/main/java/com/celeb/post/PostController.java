@@ -22,7 +22,6 @@ public class PostController {
     public DataResponseDto<Object> getPosts(
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
         String celebCategory, String search) {
-        System.out.println(celebCategory + search);
         return DataResponseDto.of(postService.getPosts(pageable, celebCategory, search));
     }
 
