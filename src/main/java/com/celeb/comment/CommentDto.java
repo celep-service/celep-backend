@@ -3,6 +3,8 @@ package com.celeb.comment;
 import com.celeb.post.Post;
 import com.celeb.user.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +19,31 @@ public class CommentDto {
     private String content;
     private User user;
     private Post post;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private Integer userId;
     private Integer postId;
+
+    private String userName;
+
+    public static List<CommentDto> commentListResponse(List<Comment> postComments) {
+        return postComments.stream()
+            .map(CommentDto::commentResponse)
+            .toList();
+    }
+
+    private static CommentDto commentResponse(Comment comment) {
+        return CommentDto.builder()
+            .id(comment.getId())
+            .content(comment.getContent())
+            .userId(comment.getUser().getId())
+            .userName(comment.getUser().getName())
+            .createdAt(comment.getCreatedAt())
+            .updatedAt(comment.getUpdatedAt())
+            .build();
+    }
+
 
     public Comment toEntity() {
         return Comment.builder()

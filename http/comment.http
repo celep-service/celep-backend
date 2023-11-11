@@ -5,6 +5,9 @@ Content-Type: application/json
 
 {
   "content": "이게댓글이지~",
-  "postId": 1,
+  "postId": 2,
   "userId": 1
 }
+
+###
+GET localhost:8080/comments?postId=2

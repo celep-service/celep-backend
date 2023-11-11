@@ -6,6 +6,7 @@ import com.celeb.post.Post;
 import com.celeb.post.PostRepository;
 import com.celeb.user.User;
 import com.celeb.user.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,15 @@ public class CommentService {
         CommentDto returnCommentDto = CommentDto.builder()
             .id(comment.getId()).build();
         return returnCommentDto;
+    }
+
+    public List<CommentDto> getComments(Integer postId) {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new GeneralException(Code.NOT_FOUND_POST));
+
+        List<Comment> postComments = post.getComment();
+        // commentDto로 변환해서 리턴
+
+        return CommentDto.commentListResponse(postComments);
     }
 }
