@@ -1,0 +1,10 @@
+###
+
+POST localhost:8080/comments
+Content-Type: application/json
+
+{
+  "content": "이게댓글이지~",
+  "postId": 1,
+  "userId": 1
+}
