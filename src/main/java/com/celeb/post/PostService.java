@@ -32,32 +32,27 @@ public class PostService {
 
     public Slice<PostDto> getPosts(Pageable pageable,
         String celebCategory, String search, Integer userId) {
+        Slice<Post> postsResponse;
 
         // userId는 타 검색 조건과 함께 사용할 수 없음
         if (userId != null) {
-            return PostDto.postListResponse(
-                postRepository.findAllByUser_Id(userId, pageable));
-        }
+            postsResponse = postRepository.findAllByUser_Id(userId, pageable);
+        } else if (search != null && celebCategory != null) {
 
-        if (search != null && celebCategory != null) {
-            return PostDto.postListResponse(
-                postRepository.findAllByContentContainingAndCeleb_CelebCategory(
-                    search, CelebCategoryEnum.valueOf(celebCategory), pageable));
-        }
-
-        if (celebCategory != null) {
-            return PostDto.postListResponse(
+            postsResponse = postRepository.findAllByContentContainingAndCeleb_CelebCategory(
+                search, CelebCategoryEnum.valueOf(celebCategory), pageable);
+        } else if (celebCategory != null) {
+            postsResponse =
                 postRepository.findAllByCeleb_CelebCategory(
-                    CelebCategoryEnum.valueOf(celebCategory), pageable));
+                    CelebCategoryEnum.valueOf(celebCategory), pageable);
+        } else if (search != null) {
+            postsResponse = postRepository.findAllByContentContaining(search, pageable);
+        } else {
+            postsResponse = postRepository.findAll(pageable);
         }
 
-        if (search != null) {
-            return PostDto.postListResponse(
-                postRepository.findAllByContentContaining(search, pageable));
-        }
-
-        Slice<Post> postList = postRepository.findAll(pageable);
-        return PostDto.postListResponse(postList);
+        return PostDto.postListResponse(postsResponse);
+        
     }
 
     @Transactional

@@ -41,6 +41,9 @@ public class PostDto {
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
 
+    // get시 commentCount를 반환하는 변수
+    private Integer commentCount;
+
     public PostDto() {
 
     }
@@ -67,6 +70,8 @@ public class PostDto {
             .updatedAt(post.getUpdatedAt())
             .codiesDtoList(codiesDtoList)
             .celeb(post.getCeleb())
+            // commentCount 조회
+            .commentCount(post.getComment().size())
             .build();
     }
 
