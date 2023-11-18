@@ -10,13 +10,21 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  server:
+    tomcat:
+      uri-encoding: UTF-8
 
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: admin
     password: admincody
-    url: jdbc:mysql://cody.cf54bs5i8vlt.ap-northeast-2.rds.amazonaws.com:3306/celep
+    url: jdbc:mysql://cody.cf54bs5i8vlt.ap-northeast-2.rds.amazonaws.com:3306/celep?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     hikari:
       max-lifetime: 25800 # Possibly consider using a shorter maxLifetime value. 오류로 인해 추가
 
