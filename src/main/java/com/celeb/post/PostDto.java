@@ -20,7 +20,6 @@ public class PostDto {
 
     private Integer id;
     private String title;
-    private String content;
     private String status;
     private String imageUrl;
     private LocalDateTime createdAt;
@@ -63,7 +62,6 @@ public class PostDto {
         return PostDto.builder()
             .id(post.getId())
             .title(post.getTitle())
-            .content(post.getContent())
             .status(post.getStatus())
             .imageUrl(post.getImageUrl())
             .createdAt(post.getCreatedAt())
@@ -79,7 +77,6 @@ public class PostDto {
     public Post toEntity() {
         return Post.builder()
             .title(title)
-            .content(content)
             .status(status)
             .imageUrl(imageUrl)
             .celeb(celeb)
@@ -87,11 +84,10 @@ public class PostDto {
             .build();
     }
 
-    public Post toEntity(String title, String content, String status, String imageUrl,
+    public Post toEntity(String title, String status, String imageUrl,
         List<Cody> codies) {
         return Post.builder()
             .title(title)
-            .content(content)
             .status(status)
             .imageUrl(imageUrl)
             .codies(codies)

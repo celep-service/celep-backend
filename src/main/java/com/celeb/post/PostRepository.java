@@ -12,12 +12,12 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Slice<Post> findAllByCeleb_CelebCategory(CelebCategoryEnum celebCategory, Pageable pageable);
 
-    @Query("select p from Post p where p.content like %:search% or p.celeb.name like %:search% "
+    @Query("select p from Post p where p.title like %:search% or p.celeb.name like %:search% "
         + "or p.title like %:search%")
     Slice<Post> findAllByContentContaining(String search, Pageable pageable);
 
     @Query(
-        "select p from Post p where (p.content like %:search% or p.celeb.name like %:search% or p.title like %:search%) "
+        "select p from Post p where (p.celeb.name like %:search% or p.title like %:search%) "
             + "and p.celeb.celebCategory = :celebCategory")
     Slice<Post> findAllByContentContainingAndCeleb_CelebCategory(String search,
         CelebCategoryEnum celebCategory, Pageable pageable);
