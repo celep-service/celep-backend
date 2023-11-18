@@ -12,7 +12,7 @@ GET localhost:8080/posts?celebCategory=SINGER
 ###
 
 
-GET localhost:8080/posts?search=이승기
+GET localhost:8080/posts?search=컨텐츠는없다
 
 ###
 
@@ -29,8 +29,7 @@ POST localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "유저아이디2",
-  "content": "진짜..",
+  "title": "컨텐츠는없다!",
   "clothesIdList": [
     1,
     2

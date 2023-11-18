@@ -52,12 +52,14 @@ public class PostService {
         }
 
         return PostDto.postListResponse(postsResponse);
-        
+
     }
 
     @Transactional
     public PostDto createPost(PostDto postDto) {
 
+        // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
+        // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
         postDto.setUser(
             userRepository.findById(postDto.getUserId()).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));

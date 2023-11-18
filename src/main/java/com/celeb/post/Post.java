@@ -28,7 +28,6 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    private String content;
     private String status;
     private String imageUrl;
 
@@ -50,7 +49,6 @@ public class Post extends BaseTimeEntity {
         User user, List<Cody> codies, Celeb celeb) {
         this.id = id;
         this.title = title;
-        this.content = content;
         this.status = status;
         this.imageUrl = imageUrl;
         this.user = user;
