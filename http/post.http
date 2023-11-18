@@ -5,17 +5,36 @@ GET localhost:8080/posts
 
 ###
 
+GET localhost:8080/posts?celebCategory=SINGER
+
+
+
+###
+
+
+GET localhost:8080/posts?search=컨텐츠는없다
+
+###
+
+GET localhost:8080/posts?search=이승기&celebCategory=ACTOR
+
+
+###
+
+GET localhost:8080/posts?userId=2
+
+###
+
 POST localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "My first post",
-  "content": "This is my first post",
+  "title": "컨텐츠는없다!",
   "clothesIdList": [
     1,
     2
   ],
-  "userId": 1,
+  "userId": 2,
   "imageUrl": "naver.com",
-  "influencerId": 1
+  "celebId": 5
 }

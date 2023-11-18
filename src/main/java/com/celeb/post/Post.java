@@ -1,25 +1,26 @@
 package com.celeb.post;
 
 
-import com.celeb.user.User;
 import com.celeb._base.entity.BaseTimeEntity;
 import com.celeb.celeb.Celeb;
 import com.celeb.cody.Cody;
 import com.celeb.comment.Comment;
+import com.celeb.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Post extends BaseTimeEntity {
 
@@ -27,7 +28,6 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    private String content;
     private String status;
     private String imageUrl;
 
@@ -40,7 +40,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post")
     private List<Cody> codies;
 
-    @OneToOne
+    @ManyToOne
     private Celeb celeb;
 
 
@@ -49,7 +49,6 @@ public class Post extends BaseTimeEntity {
         User user, List<Cody> codies, Celeb celeb) {
         this.id = id;
         this.title = title;
-        this.content = content;
         this.status = status;
         this.imageUrl = imageUrl;
         this.user = user;

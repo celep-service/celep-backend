@@ -1,4 +1,4 @@
-package com.celeb.post;
+package com.celeb.clothes;
 
 import com.celeb._base.dto.DataResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -13,21 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/posts")
-public class PostController {
+@RequestMapping("/clothes")
+public class ClothesController {
 
-    private final PostService postService;
+    private final ClothesService clothesService;
 
-    @GetMapping("")
-    public DataResponseDto<Object> getPosts(
-        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-        String celebCategory, String search, Integer userId) {
-        return DataResponseDto.of(postService.getPosts(pageable, celebCategory, search, userId));
-    }
 
     @PostMapping("")
-    public DataResponseDto<Object> createPost(@RequestBody PostDto postDto) {
-        return DataResponseDto.of(postService.createPost(postDto));
+    public DataResponseDto<Object> createClothes(@RequestBody ClothesDto clothesDto) {
+        return DataResponseDto.of(clothesService.createClothes(clothesDto));
     }
+
+
+    @GetMapping("")
+    public DataResponseDto<Object> getClothesList(
+        @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+        String celebCategory) {
+        return DataResponseDto.of(clothesService.getClothesList(pageable, celebCategory));
+    }
+
 
 }

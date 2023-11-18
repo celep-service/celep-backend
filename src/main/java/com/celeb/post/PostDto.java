@@ -1,15 +1,16 @@
 package com.celeb.post;
 
 import com.celeb.celeb.Celeb;
-import com.celeb.user.User;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyDto;
+import com.celeb.user.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Slice;
 
 @Data
 @Builder
@@ -19,7 +20,6 @@ public class PostDto {
 
     private Integer id;
     private String title;
-    private String content;
     private String status;
     private String imageUrl;
     private LocalDateTime createdAt;
@@ -35,16 +35,24 @@ public class PostDto {
     private Integer userId;
 
     // post시 influencerId를 받아서 저장하기 위한 변수
-    private Integer influencerId;
+    private Integer celebId;
 
     // get시 codyDto를 반환하는 변수
     private List<CodyDto> codiesDtoList;
 
-    public static List<PostDto> postListResponse(
-        List<Post> posts) {
-        return posts.stream()
-            .map(PostDto::postResponse)
-            .toList();
+    // get시 commentCount를 반환하는 변수
+    private Integer commentCount;
+
+    public PostDto() {
+
+    }
+
+    public static Slice<PostDto> postListResponse(
+        Slice<Post> posts) {
+//        return posts.stream()
+//            .map(PostDto::postResponse)
+//            .toList();
+        return posts.map(PostDto::postResponse);
     }
 
     public static PostDto postResponse(Post post) {
@@ -54,12 +62,14 @@ public class PostDto {
         return PostDto.builder()
             .id(post.getId())
             .title(post.getTitle())
-            .content(post.getContent())
             .status(post.getStatus())
             .imageUrl(post.getImageUrl())
             .createdAt(post.getCreatedAt())
             .updatedAt(post.getUpdatedAt())
             .codiesDtoList(codiesDtoList)
+            .celeb(post.getCeleb())
+            // commentCount 조회
+            .commentCount(post.getComment().size())
             .build();
     }
 
@@ -67,17 +77,17 @@ public class PostDto {
     public Post toEntity() {
         return Post.builder()
             .title(title)
-            .content(content)
             .status(status)
             .imageUrl(imageUrl)
+            .celeb(celeb)
+            .user(user)
             .build();
     }
 
-    public Post toEntity(String title, String content, String status, String imageUrl,
+    public Post toEntity(String title, String status, String imageUrl,
         List<Cody> codies) {
         return Post.builder()
             .title(title)
-            .content(content)
             .status(status)
             .imageUrl(imageUrl)
             .codies(codies)
