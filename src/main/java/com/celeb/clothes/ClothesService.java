@@ -25,10 +25,10 @@ public class ClothesService {
         return clothesRepository.save(clothes);
     }
 
-    public Slice<Clothes> getClothesList(Pageable pageable, String celebCategory) {
-        if (celebCategory != null) {
+    public Slice<Clothes> getClothesList(Pageable pageable, String clothesCategory) {
+        if (clothesCategory != null) {
             return clothesRepository.findAllByClothesCategory(
-                ClothesCategoryEnum.valueOf(celebCategory), pageable);
+                ClothesCategoryEnum.valueOf(clothesCategory), pageable);
         }
         return clothesRepository.findAll(pageable);
     }
