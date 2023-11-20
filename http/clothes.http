@@ -35,5 +35,5 @@ GET localhost:8080/clothes
 GET localhost:8080/clothes?size=100
 
 ###
-# celebCategory 추가
-GET localhost:8080/clothes?celebCategory=BOTTOM
+# clothesCategory 추가
+GET localhost:8080/clothes?clothesCategory=BOTTOM

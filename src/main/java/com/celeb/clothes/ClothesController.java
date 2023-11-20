@@ -28,8 +28,8 @@ public class ClothesController {
     @GetMapping("")
     public DataResponseDto<Object> getClothesList(
         @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-        String celebCategory) {
-        return DataResponseDto.of(clothesService.getClothesList(pageable, celebCategory));
+        String clothesCategory) {
+        return DataResponseDto.of(clothesService.getClothesList(pageable, clothesCategory));
     }
 
 
