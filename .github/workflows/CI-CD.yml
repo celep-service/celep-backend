@@ -20,28 +20,8 @@ permissions:
   contents: read
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Set up JDK 17
-  #     uses: actions/setup-java@v3
-  #     with:
-  #       java-version: '17'
-  #       distribution: 'temurin'
-
-  #   - name: Run chmod to make gradlew executable
-  #     run: chmod +x ./gradlew
-
-  #   - name: Build with Gradle
-  #     run: ./gradlew test
-  #     shell: bash
 
   build:
-    # needs: test
-    name: build
-    # 해당 jobs에서 아래의 steps들이 어떠한 환경에서 실행될 것인지를 지정합니다.
     runs-on: ubuntu-latest
 
     steps:
@@ -67,6 +47,15 @@ jobs:
         run: zip -r build.zip build/libs
         shell: bash
 
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use the build artifacts
+        uses: actions/checkout@v2
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -76,9 +65,9 @@ jobs:
 
       # script files 복사
       - name: Copy script
-        run: cp ./scripts/*.sh ./deploy
+        run: cp ./scripts/*.sh ./deployㅠㅠㅠ
 
-        # 현재 시간 구하기
+      # 현재 시간 구하기
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
