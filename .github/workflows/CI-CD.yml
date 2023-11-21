@@ -21,7 +21,7 @@ permissions:
 
 jobs:
 
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,19 +42,9 @@ jobs:
         run: ./gradlew build
         shell: bash
 
-        # $GITHUB_SHA 는 GitHub Actions 에서 기본적으로 제공하는 환경변수로, 해당 workflow 를 트리거한 Commit 의 고유 해시값입니다.
       - name: Make zip file
-        run: zip -r build.zip build/libs
+        run: zip -r ./build.zip .
         shell: bash
-
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Use the build artifacts
-        uses: actions/checkout@v2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -65,7 +55,7 @@ jobs:
 
       # script files 복사
       - name: Copy script
-        run: cp ./scripts/*.sh ./deployㅠㅠㅠ
+        run: cp ./scripts/*.sh ./deploy
 
       # 현재 시간 구하기
       - name: Get current time
@@ -77,7 +67,7 @@ jobs:
 
       # S3에 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/${{  steps.current-time.outputs.formattedTime  }}.zip
+        run: aws s3 cp --region ap-northeast-2 ./build.zip s3://$S3_BUCKET_NAME/$PROJECT_NAME/${{  steps.current-time.outputs.formattedTime  }}.zip
 
       # deploy
       - name: 🚀 Deploy to EC2 with CodeDeploy
@@ -87,5 +77,5 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name celep-deploy \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/${{  steps.current-time.outputs.formattedTime  }}.zip \
           --region ap-northeast-2 \
