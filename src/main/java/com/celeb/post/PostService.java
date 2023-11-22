@@ -1,7 +1,9 @@
 package com.celeb.post;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
 import com.celeb.clothes.Clothes;
 import com.celeb.clothes.ClothesRepository;
@@ -12,6 +14,9 @@ import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,14 +32,45 @@ public class PostService {
     private final CodyService codyService;
     private final CelebRepository celebRepository;
 
-    public List<PostDto> getPosts() {
-        List<Post> postList = postRepository.findAll();
-        return PostDto.postListResponse(postList);
+    public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
+        Integer userId, String gender) {
+        Specification<Post> spec = Specification.where(null);
+
+        if (gender != null) {
+            GenderEnum genderEnum = GenderEnum.valueOf(gender.toUpperCase());
+            spec = spec.and(
+                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("gender"),
+                    genderEnum)
+            );
+        }
+        if (userId != null) {
+            spec = spec.and(
+                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user").get("id"),
+                    userId));
+        }
+        if (search != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("title"), "%" + search + "%"),
+                    criteriaBuilder.like(root.get("celeb").get("name"), "%" + search + "%")
+                )
+            );
+        }
+        if (celebCategory != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(
+                root.get("celeb").get("celebCategory"), CelebCategoryEnum.valueOf(celebCategory)));
+        }
+
+        Slice<Post> postsResponse = postRepository.findAll(spec, pageable);
+
+        return PostDto.postListResponse(postsResponse);
     }
 
     @Transactional
-    public String createPost(PostDto postDto) {
+    public PostDto createPost(PostDto postDto) {
 
+        // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
+        // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
         postDto.setUser(
             userRepository.findById(postDto.getUserId()).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));
@@ -60,10 +96,11 @@ public class PostService {
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
 
-        postDto.setCodies(codyList);
+        savedPost.setCodies(codyList);
 
-        postRepository.save(postDto.toEntity());
+        PostDto returnPostDto = new PostDto();
+        returnPostDto.setId(savedPost.getId());
 
-        return "포스트 생성 완료";
+        return returnPostDto;
     }
 }

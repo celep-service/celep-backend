@@ -33,6 +33,10 @@ public enum Code {
     NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),
     ERROR_UPLOAD_CLOTHES(4002, HttpStatus.BAD_REQUEST, "Error upload clothes"),
 
+    // Post
+    NOT_FOUND_POST(6001, HttpStatus.NOT_FOUND, "Post not found"),
+
+
     INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
     ;
 
