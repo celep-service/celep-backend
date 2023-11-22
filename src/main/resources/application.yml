@@ -5,6 +5,10 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+pring:
+  jpa:
+    properties:
+      hibernate:
 
 spring:
   jpa:
@@ -15,6 +19,9 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+        jdbc:
+          time_zone: Asia/Seoul
+
   server:
     tomcat:
       uri-encoding: UTF-8
