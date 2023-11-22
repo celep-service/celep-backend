@@ -5,8 +5,12 @@ GET localhost:8080/posts
 
 ###
 
-GET localhost:8080/posts?celebCategory=SINGER
+GET localhost:8080/posts?celebCategory=ACTOR
 
+
+###
+
+GET localhost:8080/posts?gender=MALE
 
 
 ###
@@ -16,7 +20,7 @@ GET localhost:8080/posts?search=컨텐츠는없다
 
 ###
 
-GET localhost:8080/posts?search=이승기&celebCategory=ACTOR
+GET localhost:8080/posts?search=박보영&celebCategory=ACTOR
 
 
 ###
@@ -32,10 +36,10 @@ Content-Type: application/json
   "title": "컨텐츠는없다!",
   "clothesIdList": [
     1,
-    2
+    5
   ],
   "userId": 2,
   "imageUrl": "naver.com",
-  "celebId": 5,
+  "celebId": 6,
   "gender": "FEMALE"
 }
