@@ -36,5 +36,6 @@ Content-Type: application/json
   ],
   "userId": 2,
   "imageUrl": "naver.com",
-  "celebId": 5
+  "celebId": 5,
+  "gender": "FEMALE"
 }

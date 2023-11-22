@@ -1,5 +1,6 @@
 package com.celeb.post;
 
+import com.celeb._base.constant.GenderEnum;
 import com.celeb.celeb.Celeb;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyDto;
@@ -43,6 +44,8 @@ public class PostDto {
     // get시 commentCount를 반환하는 변수
     private Integer commentCount;
 
+    private String gender;
+
     public PostDto() {
 
     }
@@ -70,6 +73,7 @@ public class PostDto {
             .celeb(post.getCeleb())
             // commentCount 조회
             .commentCount(post.getComment().size())
+            .gender(post.getGender().toString())
             .build();
     }
 
@@ -81,16 +85,18 @@ public class PostDto {
             .imageUrl(imageUrl)
             .celeb(celeb)
             .user(user)
+            .gender(GenderEnum.valueOf(gender))
             .build();
     }
 
     public Post toEntity(String title, String status, String imageUrl,
-        List<Cody> codies) {
+        List<Cody> codies, GenderEnum gender) {
         return Post.builder()
             .title(title)
             .status(status)
             .imageUrl(imageUrl)
             .codies(codies)
+            .gender(gender)
             .build();
     }
 }
