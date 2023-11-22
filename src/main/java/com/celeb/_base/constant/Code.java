@@ -22,6 +22,8 @@ public enum Code {
     ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "Already exists user"),
     EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
     EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
+    EMPTY_USER(3007, HttpStatus.BAD_REQUEST, "User is empty"),
+    INVALID_PASSWORD(3008,HttpStatus.BAD_REQUEST, "Password is invalid"),
 
     // Influencer
     NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "CELEB not found"),

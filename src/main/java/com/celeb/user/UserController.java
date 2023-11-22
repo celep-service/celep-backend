@@ -19,4 +19,8 @@ public class UserController {
         return DataResponseDto.of(userService.createUser(userDto));
     }
 
+    @PostMapping("/login")
+    public DataResponseDto<String> login(@RequestBody LoginRequestDto loginRequestDto){
+        return DataResponseDto.of(userService.login(loginRequestDto));
+    }
 }
