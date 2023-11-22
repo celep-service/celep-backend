@@ -1,8 +1,10 @@
 package com.celeb.post;
 
 import com.celeb.celeb.CelebCategoryEnum;
+import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
         CelebCategoryEnum celebCategory, Pageable pageable);
 
     Slice<Post> findAllByUser_Id(Integer userId, Pageable pageable);
+
+    Slice<Post> findAll(@Nullable Specification<Post> spec, Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package com.celeb.post;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,29 +32,38 @@ public class PostService {
     private final CodyService codyService;
     private final CelebRepository celebRepository;
 
-    public Slice<PostDto> getPosts(Pageable pageable,
-        String celebCategory, String search, Integer userId) {
-        Slice<Post> postsResponse;
+    public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
+        Integer userId, String gender) {
+        Specification<Post> spec = Specification.where(null);
 
-        // userId는 타 검색 조건과 함께 사용할 수 없음
+        if (gender != null) {
+            GenderEnum genderEnum = GenderEnum.valueOf(gender.toUpperCase());
+            spec = spec.and(
+                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("gender"),
+                    genderEnum)
+            );
+        }
         if (userId != null) {
-            postsResponse = postRepository.findAllByUser_Id(userId, pageable);
-        } else if (search != null && celebCategory != null) {
-
-            postsResponse = postRepository.findAllByContentContainingAndCeleb_CelebCategory(
-                search, CelebCategoryEnum.valueOf(celebCategory), pageable);
-        } else if (celebCategory != null) {
-            postsResponse =
-                postRepository.findAllByCeleb_CelebCategory(
-                    CelebCategoryEnum.valueOf(celebCategory), pageable);
-        } else if (search != null) {
-            postsResponse = postRepository.findAllByContentContaining(search, pageable);
-        } else {
-            postsResponse = postRepository.findAll(pageable);
+            spec = spec.and(
+                (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user").get("id"),
+                    userId));
+        }
+        if (search != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("title"), "%" + search + "%"),
+                    criteriaBuilder.like(root.get("celeb").get("name"), "%" + search + "%")
+                )
+            );
+        }
+        if (celebCategory != null) {
+            spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(
+                root.get("celeb").get("celebCategory"), CelebCategoryEnum.valueOf(celebCategory)));
         }
 
-        return PostDto.postListResponse(postsResponse);
+        Slice<Post> postsResponse = postRepository.findAll(spec, pageable);
 
+        return PostDto.postListResponse(postsResponse);
     }
 
     @Transactional

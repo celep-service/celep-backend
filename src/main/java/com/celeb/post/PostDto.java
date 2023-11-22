@@ -1,9 +1,11 @@
 package com.celeb.post;
 
+import com.celeb._base.constant.GenderEnum;
 import com.celeb.celeb.Celeb;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyDto;
 import com.celeb.user.User;
+import com.celeb.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,6 +45,11 @@ public class PostDto {
     // get시 commentCount를 반환하는 변수
     private Integer commentCount;
 
+    // get시 userDto를 반환하는 변수
+    private UserDto userDto;
+
+    private String gender;
+
     public PostDto() {
 
     }
@@ -62,11 +69,13 @@ public class PostDto {
         return PostDto.builder()
             .id(post.getId())
             .title(post.getTitle())
+            .gender(post.getGender().toString())
             .status(post.getStatus())
             .imageUrl(post.getImageUrl())
             .createdAt(post.getCreatedAt())
             .updatedAt(post.getUpdatedAt())
             .codiesDtoList(codiesDtoList)
+            .userDto(UserDto.userSignUpResponse(post.getUser()))
             .celeb(post.getCeleb())
             // commentCount 조회
             .commentCount(post.getComment().size())
@@ -81,16 +90,7 @@ public class PostDto {
             .imageUrl(imageUrl)
             .celeb(celeb)
             .user(user)
-            .build();
-    }
-
-    public Post toEntity(String title, String status, String imageUrl,
-        List<Cody> codies) {
-        return Post.builder()
-            .title(title)
-            .status(status)
-            .imageUrl(imageUrl)
-            .codies(codies)
+            .gender(GenderEnum.valueOf(gender))
             .build();
     }
 }
