@@ -16,7 +16,7 @@ GET localhost:8080/posts?gender=MALE
 ###
 
 
-GET localhost:8080/posts?search=컨텐츠는없다
+GET localhost:8080/posts?search=이것이 title!
 
 ###
 
@@ -33,7 +33,7 @@ POST localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "컨텐츠는없다!",
+  "title": "이것이 title!",
   "clothesIdList": [
     1,
     5
