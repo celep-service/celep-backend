@@ -1,6 +1,8 @@
 package com.celeb.post;
 
+import com.celeb._base.constant.Code;
 import com.celeb._base.dto.DataResponseDto;
+import com.celeb._base.exception.GeneralException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,19 @@ public class PostController {
 
     @PostMapping("")
     public DataResponseDto<Object> createPost(@RequestBody PostDto postDto) {
+        //Validation
+        if (postDto.getTitle() == null || postDto.getTitle().isEmpty()) {
+            throw new GeneralException(Code.VALIDATION_ERROR, "내용을 입력해주세요.");
+        } else if (postDto.getCelebId() == null) {
+            throw new GeneralException(Code.VALIDATION_ERROR, "셀럽을 선택해주세요.");
+        } else if (postDto.getClothesIdList() == null || postDto.getClothesIdList().isEmpty()) {
+            throw new GeneralException(Code.VALIDATION_ERROR, "코디를 선택해주세요.");
+        } else if (postDto.getGender() == null || postDto.getGender().isEmpty()) {
+            throw new GeneralException(Code.VALIDATION_ERROR, "성별을 선택해주세요.");
+        } else if (postDto.getImageUrl() == null || postDto.getImageUrl().isEmpty()) {
+            throw new GeneralException(Code.VALIDATION_ERROR, "이미지를 선택해주세요.");
+        }
+        
         return DataResponseDto.of(postService.createPost(postDto));
     }
 
