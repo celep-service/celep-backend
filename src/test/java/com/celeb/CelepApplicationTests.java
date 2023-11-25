@@ -4,11 +4,13 @@ import com.celeb.celeb.CelebDto;
 import com.celeb.celeb.CelebService;
 import com.celeb.clothes.ClothesDto;
 import com.celeb.clothes.ClothesService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@Transactional
 class CelepApplicationTests {
 
     @Autowired
