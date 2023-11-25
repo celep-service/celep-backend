@@ -23,7 +23,7 @@ import org.springframework.data.domain.Slice;
 public class PostDto {
 
     private Integer id;
-    @NotEmpty(message = "제목을 입력해주세요.")
+    @NotEmpty(message = "냬용을 입력해주세요.")
     private String title;
     private String status;
     @NotNull(message = "이미지를 입력해주세요.")
@@ -41,6 +41,7 @@ public class PostDto {
     private Integer userId;
 
     // post시 influencerId를 받아서 저장하기 위한 변수
+    @NotNull(message = "셀럽을 입력해주세요.")
     private Integer celebId;
 
     // get시 codyDto를 반환하는 변수
@@ -52,6 +53,7 @@ public class PostDto {
     // get시 userDto를 반환하는 변수
     private UserDto userDto;
 
+    @NotEmpty(message = "성별을 입력해주세요.")
     private String gender;
 
     public PostDto() {

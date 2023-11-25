@@ -17,9 +17,9 @@ public class BaseExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
         WebRequest request) {
-        System.out.println();
-        // 유효성 검증 예외 처리 로직 추가
-        return handleExceptionInternal(ex, Code.VALIDATION_ERROR, request);
+        String error = ex.getBindingResult().getFieldError().getDefaultMessage();
+        return handleExceptionInternal(ex, Code.VALIDATION_ERROR, error);
+//        return handleExceptionInternal(ex, Code.VALIDATION_ERROR, request);
     }
 
 //    @ExceptionHandler
@@ -42,6 +42,12 @@ public class BaseExceptionHandler {
         WebRequest request) {
         return ResponseEntity.internalServerError()
             .body(ErrorResponseDto.of(errorCode, errorCode.getMessage(e)));
+    }
+
+    protected ResponseEntity<Object> handleExceptionInternal(Exception e, Code errorCode,
+        String message) {
+        return ResponseEntity.internalServerError()
+            .body(ErrorResponseDto.of(errorCode, message));
     }
 
 //    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,

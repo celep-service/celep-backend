@@ -31,21 +31,6 @@ public class PostController {
 
     @PostMapping("")
     public DataResponseDto<Object> createPost(@Valid @RequestBody PostDto postDto) {
-
-        System.out.println("@@ " + postDto.getTitle());
-//        //Validation
-//        if (postDto.getTitle() == null || postDto.getTitle().isEmpty()) {
-//            throw new GeneralException(Code.VALIDATION_ERROR, "내용을 입력해주세요.");
-//        } else if (postDto.getCelebId() == null) {
-//            throw new GeneralException(Code.VALIDATION_ERROR, "셀럽을 선택해주세요.");
-//        } else if (postDto.getClothesIdList() == null || postDto.getClothesIdList().isEmpty()) {
-//            throw new GeneralException(Code.VALIDATION_ERROR, "코디를 선택해주세요.");
-//        } else if (postDto.getGender() == null || postDto.getGender().isEmpty()) {
-//            throw new GeneralException(Code.VALIDATION_ERROR, "성별을 선택해주세요.");
-//        } else if (postDto.getImageUrl() == null || postDto.getImageUrl().isEmpty()) {
-//            throw new GeneralException(Code.VALIDATION_ERROR, "이미지를 선택해주세요.");
-//        }
-
         return DataResponseDto.of(postService.createPost(postDto));
     }
 
