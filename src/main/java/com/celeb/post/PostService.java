@@ -89,13 +89,11 @@ public class PostService {
 
         // 옷 찾기
         List<Clothes> clothesList = clothesRepository.findAllById(postDto.getClothesIdList());
-        postDto.getClothesIdList().forEach(
-            clothes -> clothesRepository.findById(clothes).orElseThrow(() ->
-                new GeneralException(Code.NOT_FOUND_CLOTHES))
-        );
-
+        if (clothesList.size() != postDto.getClothesIdList().size()) {
+            throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+        }
+        
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
-
         savedPost.setCodies(codyList);
 
         PostDto returnPostDto = new PostDto();
