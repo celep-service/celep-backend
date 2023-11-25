@@ -7,6 +7,8 @@ import com.celeb.cody.CodyDto;
 import com.celeb.user.User;
 import com.celeb.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,8 +23,10 @@ import org.springframework.data.domain.Slice;
 public class PostDto {
 
     private Integer id;
+    @NotEmpty(message = "제목을 입력해주세요.")
     private String title;
     private String status;
+    @NotNull(message = "이미지를 입력해주세요.")
     private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
