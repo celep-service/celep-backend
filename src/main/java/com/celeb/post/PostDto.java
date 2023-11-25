@@ -9,6 +9,7 @@ import com.celeb.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,7 @@ public class PostDto {
     private UserDto userDto;
 
     @NotEmpty(message = "성별을 입력해주세요.")
+    @Pattern(regexp = "MALE|FEMALE", message = "성별은 MALE, FEMALE만 가능합니다.")
     private String gender;
 
     public PostDto() {

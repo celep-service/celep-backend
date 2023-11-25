@@ -1,6 +1,7 @@
 package com.celeb.clothes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +15,14 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClothesDto {
 
+    @NotEmpty(message = "옷 이름을 입력해주세요.")
     private String name;
+    @NotEmpty(message = "옷 카테고리를 입력해주세요.")
     private String clothesCategory;
     private String brand;
+    @NotEmpty(message = "옷에 어울리는 성별을 입력해주세요.")
     private String gender;
+    @NotEmpty(message = "옷 이미지를 입력해주세요.")
     private String imageUrl;
     private String sellUrl;
 
