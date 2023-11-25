@@ -1,17 +1,10 @@
 package com.celeb._base.constant;
 
 public enum GenderEnum {
-    MALE("남자"),
-    FEMALE("여자");
-
-    private final String gender;
-
-    GenderEnum(String gender) {
-        this.gender = gender;
-    }
+    MALE,
+    FEMALE;
 
     public String getGender() {
-        return gender;
+        return this.name();
     }
-
 }
