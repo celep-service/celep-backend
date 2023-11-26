@@ -1,7 +1,7 @@
-package com.celeb._base.config;
+package com.celeb.security.config;
 
-import com.celeb.jwt.JwtTokenFilter;
-import com.celeb.jwt.JwtTokenUtil;
+import com.celeb.security.jwt.JwtTokenFilter;
+import com.celeb.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

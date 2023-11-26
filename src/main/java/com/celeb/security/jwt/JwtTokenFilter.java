@@ -1,4 +1,4 @@
-package com.celeb.jwt;
+package com.celeb.security.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,9 +28,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = authorizationHeader.split(" ")[1];
         if(!jwtTokenUtil.validateToken(token)){
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
+
         Authentication authentication = jwtTokenUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

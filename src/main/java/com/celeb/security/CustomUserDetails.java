@@ -1,5 +1,6 @@
-package com.celeb.user;
+package com.celeb.security;
 
+import com.celeb.user.User;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;

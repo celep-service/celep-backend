@@ -2,7 +2,7 @@ package com.celeb.user;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
-import com.celeb.jwt.JwtTokenUtil;
+import com.celeb.security.jwt.JwtTokenUtil;
 import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,6 @@ public class UserService {
         if (StringUtils.isEmpty(userDto.getGender())) {
             throw new GeneralException(Code.EMPTY_GENDER);
         }
-        // add more validation
 
         User user = userDto.toEntity();
         String encode_password = passwordEncoder.encode(user.getPassword());

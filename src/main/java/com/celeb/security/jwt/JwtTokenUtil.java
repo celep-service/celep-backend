@@ -1,7 +1,7 @@
-package com.celeb.jwt;
+package com.celeb.security.jwt;
 
-import com.celeb.user.CustomUserDetails;
-import com.celeb.user.CustomUserDetailsService;
+import com.celeb.security.CustomUserDetails;
+import com.celeb.security.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

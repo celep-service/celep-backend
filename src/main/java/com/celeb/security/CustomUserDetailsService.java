@@ -1,7 +1,10 @@
-package com.celeb.user;
+package com.celeb.security;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.security.CustomUserDetails;
+import com.celeb.user.User;
+import com.celeb.user.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
