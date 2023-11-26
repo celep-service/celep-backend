@@ -1,5 +1,6 @@
 package com.celeb.comment;
 
+import com.celeb._base.constant.StatusEnum;
 import com.celeb.post.Post;
 import com.celeb.user.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,6 +22,7 @@ public class CommentDto {
     private Post post;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String status;
 
     private Integer userId;
     private Integer postId;
@@ -41,6 +43,7 @@ public class CommentDto {
             .userName(comment.getUser().getName())
             .createdAt(comment.getCreatedAt())
             .updatedAt(comment.getUpdatedAt())
+            .status(comment.getStatus())
             .build();
     }
 
@@ -50,6 +53,7 @@ public class CommentDto {
             .content(content)
             .user(user)
             .post(post)
+            .status(StatusEnum.ACTIVE.getStatus())
             .build();
     }
 
