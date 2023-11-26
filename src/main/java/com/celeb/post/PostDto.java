@@ -1,6 +1,7 @@
 package com.celeb.post;
 
 import com.celeb._base.constant.GenderEnum;
+import com.celeb._base.constant.StatusEnum;
 import com.celeb.celeb.Celeb;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyDto;
@@ -85,6 +86,7 @@ public class PostDto {
             .codiesDtoList(codiesDtoList)
             .userDto(UserDto.userSignUpResponse(post.getUser()))
             .celeb(post.getCeleb())
+            .status(post.getStatus())
             // commentCount 조회
             .commentCount(post.getComment().size())
             .build();
@@ -98,6 +100,7 @@ public class PostDto {
             .imageUrl(imageUrl)
             .celeb(celeb)
             .user(user)
+            .status(StatusEnum.ACTIVE.getStatus())
             .gender(GenderEnum.valueOf(gender))
             .build();
     }
