@@ -48,6 +48,9 @@ public class CommentService {
         List<Comment> postComments = post.getComment();
         // commentDto로 변환해서 리턴
 
-        return CommentDto.commentListResponse(postComments);
+        List<Comment> activeCommentList = postComments.stream()
+            .filter(comment -> comment.getStatus().equals("ACTIVE")).toList();
+
+        return CommentDto.commentListResponse(activeCommentList);
     }
 }
