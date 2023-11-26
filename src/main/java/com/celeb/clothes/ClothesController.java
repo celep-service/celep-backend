@@ -1,6 +1,7 @@
 package com.celeb.clothes;
 
 import com.celeb._base.dto.DataResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +21,7 @@ public class ClothesController {
 
 
     @PostMapping("")
-    public DataResponseDto<Object> createClothes(@RequestBody ClothesDto clothesDto) {
+    public DataResponseDto<Object> createClothes(@Valid @RequestBody ClothesDto clothesDto) {
         return DataResponseDto.of(clothesService.createClothes(clothesDto));
     }
 

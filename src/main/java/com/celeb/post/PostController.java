@@ -1,6 +1,7 @@
 package com.celeb.post;
 
 import com.celeb._base.dto.DataResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,7 +28,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public DataResponseDto<Object> createPost(@RequestBody PostDto postDto) {
+    public DataResponseDto<Object> createPost(@Valid @RequestBody PostDto postDto) {
         return DataResponseDto.of(postService.createPost(postDto));
     }
 

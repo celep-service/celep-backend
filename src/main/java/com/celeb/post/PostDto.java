@@ -7,6 +7,9 @@ import com.celeb.cody.CodyDto;
 import com.celeb.user.User;
 import com.celeb.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,8 +24,10 @@ import org.springframework.data.domain.Slice;
 public class PostDto {
 
     private Integer id;
+    @NotEmpty(message = "냬용을 입력해주세요.")
     private String title;
     private String status;
+    @NotNull(message = "이미지를 입력해주세요.")
     private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -37,6 +42,7 @@ public class PostDto {
     private Integer userId;
 
     // post시 influencerId를 받아서 저장하기 위한 변수
+    @NotNull(message = "셀럽을 입력해주세요.")
     private Integer celebId;
 
     // get시 codyDto를 반환하는 변수
@@ -48,6 +54,8 @@ public class PostDto {
     // get시 userDto를 반환하는 변수
     private UserDto userDto;
 
+    @NotEmpty(message = "성별을 입력해주세요.")
+    @Pattern(regexp = "MALE|FEMALE", message = "성별은 MALE, FEMALE만 가능합니다.")
     private String gender;
 
     public PostDto() {
