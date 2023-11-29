@@ -28,12 +28,15 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne
     private Post post;
 
+    private String status;
+
 
     @Builder
-    public Comment(Integer id, String content, User user, Post post) {
+    public Comment(Integer id, String content, User user, Post post, String status) {
         this.id = id;
         this.content = content;
         this.user = user;
         this.post = post;
+        this.status = status;
     }
 }

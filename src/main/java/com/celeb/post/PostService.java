@@ -2,6 +2,7 @@ package com.celeb.post;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
+import com.celeb._base.constant.StatusEnum;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
@@ -33,14 +34,14 @@ public class PostService {
     private final CelebRepository celebRepository;
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
-        Integer userId, String gender) {
+        Integer userId, GenderEnum gender) {
         Specification<Post> spec = Specification.where(null);
 
         if (gender != null) {
-            GenderEnum genderEnum = GenderEnum.valueOf(gender.toUpperCase());
+
             spec = spec.and(
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("gender"),
-                    genderEnum)
+                    gender)
             );
         }
         if (userId != null) {
@@ -60,6 +61,11 @@ public class PostService {
             spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(
                 root.get("celeb").get("celebCategory"), CelebCategoryEnum.valueOf(celebCategory)));
         }
+
+        // 추가: status 값이 "ACTIVE"인 경우만 필터링
+        spec = spec.and((root, query, criteriaBuilder) ->
+            criteriaBuilder.equal(root.get("status"), StatusEnum.ACTIVE.getStatus())
+        );
 
         Slice<Post> postsResponse = postRepository.findAll(spec, pageable);
 
@@ -89,13 +95,11 @@ public class PostService {
 
         // 옷 찾기
         List<Clothes> clothesList = clothesRepository.findAllById(postDto.getClothesIdList());
-        postDto.getClothesIdList().forEach(
-            clothes -> clothesRepository.findById(clothes).orElseThrow(() ->
-                new GeneralException(Code.NOT_FOUND_CLOTHES))
-        );
+        if (clothesList.size() != postDto.getClothesIdList().size()) {
+            throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+        }
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
-
         savedPost.setCodies(codyList);
 
         PostDto returnPostDto = new PostDto();

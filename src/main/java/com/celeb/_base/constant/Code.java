@@ -13,26 +13,27 @@ import org.springframework.http.HttpStatus;
 public enum Code {
     OK(200, HttpStatus.OK, "OK"),
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
-    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
+    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "검증 에러가 발생하였습니다."),
+    TYPE_MISMATCH(2002, HttpStatus.BAD_REQUEST, "타입이 일치하지 않습니다."),
 
     // User
-    NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "User not found"),
-    EMPTY_EMAIL(3002, HttpStatus.BAD_REQUEST, "Email is empty"),
-    EMPTY_NAME(3003, HttpStatus.BAD_REQUEST, "Name is empty"),
-    ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "Already exists user"),
-    EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
-    EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
+    NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+    EMPTY_EMAIL(3002, HttpStatus.BAD_REQUEST, "이메일을 입력해주세요."),
+    EMPTY_NAME(3003, HttpStatus.BAD_REQUEST, "이름을 입력해주세요."),
+    ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
+    EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "비밀번호를 입력해주세요"),
+    EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
 
     // Influencer
-    NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "CELEB not found"),
+    NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "셀럽을 찾을 수 없습니다."),
 
 
     // Clothes
-    NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "Clothes not found"),
-    ERROR_UPLOAD_CLOTHES(4002, HttpStatus.BAD_REQUEST, "Error upload clothes"),
+    NOT_FOUND_CLOTHES(4001, HttpStatus.NOT_FOUND, "의류를 찾을 수 없습니다."),
+    ERROR_UPLOAD_CLOTHES(4002, HttpStatus.BAD_REQUEST, "의류를 등록하는데 실패했습니다."),
 
     // Post
-    NOT_FOUND_POST(6001, HttpStatus.NOT_FOUND, "Post not found"),
+    NOT_FOUND_POST(6001, HttpStatus.NOT_FOUND, "포스트를 찾을 수 없습니다."),
 
 
     INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
@@ -43,7 +44,8 @@ public enum Code {
     private final String message;
 
     public String getMessage(Throwable e) {
-        return this.getMessage(this.getMessage() + " - " + e.getMessage());
+//        return this.getMessage(this.getMessage() + " - " + e.getMessage());
+        return this.getMessage(e.getMessage());
     }
 
     public String getMessage(String message) {
