@@ -27,7 +27,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @Operation(summary = "포스트 정보 조회", description = "회원 정보를 가져옵니다.", tags = {"게시글 관련 API"})
+    @Operation(summary = "포스트 정보 조회", description = "포스트 정보를 가져옵니다.")
     @Parameters({
         @Parameter(name = "celebCategory", description = "셀럽 카테고리"),
         @Parameter(name = "search", description = "검색어"),
@@ -51,7 +51,9 @@ public class PostController {
             postService.getPosts(pageable, celebCategory, search, userId, gender));
     }
 
+    @Operation(summary = "포스트 정보 생성", description = "포스트를 생성합니다.")
     @PostMapping("")
+
     public DataResponseDto<Object> createPost(@Valid @RequestBody PostDto postDto) {
         return DataResponseDto.of(postService.createPost(postDto));
     }
