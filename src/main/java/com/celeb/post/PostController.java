@@ -53,7 +53,6 @@ public class PostController {
 
     @Operation(summary = "포스트 정보 생성", description = "포스트를 생성합니다.")
     @PostMapping("")
-
     public DataResponseDto<Object> createPost(@Valid @RequestBody PostDto postDto) {
         return DataResponseDto.of(postService.createPost(postDto));
     }
