@@ -48,7 +48,8 @@ public class PostDto {
     private Celeb celeb;
 
     // post시 clothesId를 받아서 저장하기 위한 변수
-    @Schema(description = "옷을 입력해주세요.", example = "[1,2,3]")
+    @NotEmpty(message = "옷 정보를 입력해주세요.")
+    @Schema(description = "옷 정보를 입력해주세요.", example = "[1,2,3]")
     private List<Integer> clothesIdList;
 
     // post시 userId를 받아서 저장하기 위한 변수
