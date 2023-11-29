@@ -1,6 +1,8 @@
 package com.celeb.comment;
 
 import com.celeb._base.dto.DataResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,15 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/comments")
+@Tag(name = "댓글 관련 API", description = "댓글 관련 API")
 public class CommentController {
 
     private final CommentService commentService;
 
+    @Operation(summary = "댓글 정보 생성", description = "댓글 정보를 만듭니다.")
     @PostMapping("")
     public DataResponseDto<Object> createComment(@RequestBody CommentDto commentDto) {
         return DataResponseDto.of(commentService.createComment(commentDto));
     }
 
+    @Operation(summary = "댓글 정보 조회", description = "댓글 정보를 가져옵니다.")
     @GetMapping("")
     public DataResponseDto<Object> getComments(@RequestParam Integer postId) {
         return DataResponseDto.of(commentService.getComments(postId));

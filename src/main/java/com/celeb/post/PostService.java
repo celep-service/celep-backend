@@ -34,14 +34,14 @@ public class PostService {
     private final CelebRepository celebRepository;
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
-        Integer userId, String gender) {
+        Integer userId, GenderEnum gender) {
         Specification<Post> spec = Specification.where(null);
 
         if (gender != null) {
-            GenderEnum genderEnum = GenderEnum.valueOf(gender.toUpperCase());
+
             spec = spec.and(
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("gender"),
-                    genderEnum)
+                    gender)
             );
         }
         if (userId != null) {
