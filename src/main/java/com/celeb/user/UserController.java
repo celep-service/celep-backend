@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public DataResponseDto<String> login(@RequestBody LoginRequestDto loginRequestDto){
+    public DataResponseDto<Object> login(@RequestBody LoginRequestDto loginRequestDto){
         return DataResponseDto.of(userService.login(loginRequestDto));
     }
 }

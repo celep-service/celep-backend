@@ -1,5 +1,7 @@
 package com.celeb.security.config;
 
+import com.celeb.security.jwt.JwtExceptionFilter;
+import com.celeb.security.jwt.JwtService;
 import com.celeb.security.jwt.JwtTokenFilter;
 import com.celeb.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenUtil jwtTokenUtil;
+    private final JwtService jwtService;
+    private final JwtExceptionFilter jwtExceptionFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -34,7 +39,8 @@ public class SecurityConfig {
             .sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .addFilterBefore(new JwtTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtTokenFilter(jwtTokenUtil, jwtService), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtExceptionFilter, JwtTokenFilter.class)
             .authorizeHttpRequests((authorizeRequests) ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.POST, "/posts/**",

@@ -2,7 +2,9 @@ package com.celeb.user;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.security.jwt.JwtService;
 import com.celeb.security.jwt.JwtTokenUtil;
+import com.celeb.security.jwt.Token;
 import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -45,7 +48,7 @@ public class UserService {
         return UserDto.userSignUpResponse(savedUser);
     }
 
-    public String login(LoginRequestDto loginRequestDto){
+    public Token login(LoginRequestDto loginRequestDto){
 
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
@@ -58,7 +61,13 @@ public class UserService {
             throw new GeneralException(Code.INVALID_PASSWORD);
         }
 
-        return JwtTokenUtil.createToken(user.get().getEmail());
+        String accessToken = JwtTokenUtil.createAccessToken(email);
+        String refreshToken = JwtTokenUtil.createRefreshToken(email);
+        jwtService.save(refreshToken);
+
+        Token token = new Token(accessToken, refreshToken);
+
+        return token;
     }
 
     public User getLoginUserByEmail(String email){

@@ -1,5 +1,6 @@
 package com.celeb.security.jwt;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,26 +17,23 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+            throw new JwtException("지원되지 않는 JWT 토큰입니다");
         }
 
-        String token = authorizationHeader.split(" ")[1];
-        if(!jwtTokenUtil.validateToken(token)){
-            filterChain.doFilter(request, response);
-            return;
+        String accessToken = authorizationHeader.split(" ")[1];
+
+        if(jwtTokenUtil.validateToken(accessToken)){
+
+            Authentication authentication = jwtTokenUtil.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
-        Authentication authentication = jwtTokenUtil.getAuthentication(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         filterChain.doFilter(request, response);
     }
-
 }
