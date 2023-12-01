@@ -13,7 +13,8 @@ import org.springframework.http.HttpStatus;
 public enum Code {
     OK(200, HttpStatus.OK, "OK"),
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
-    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
+    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "검증 에러가 발생하였습니다."),
+    TYPE_MISMATCH(2002, HttpStatus.BAD_REQUEST, "타입이 일치하지 않습니다."),
 
     // User
 

@@ -38,7 +38,7 @@ dependencies {
     runtimeOnly ("io.jsonwebtoken:jjwt-jackson:0.11.5")
     // https://mvnrepository.com/artifact/org.json/json
     implementation("org.json:json:20160810")
-
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
 tasks.withType<Test> {
