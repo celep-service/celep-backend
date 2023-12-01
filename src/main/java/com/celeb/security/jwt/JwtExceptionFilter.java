@@ -35,8 +35,13 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             else if(Code.NOT_SUPPORTED_TOKEN.getMessage().equals(message)){
                 setResponse(response, Code.NOT_SUPPORTED_TOKEN);
             }
+            else if(Code.NOT_SIGNATURE_TOKEN.getMessage().equals(message)){
+                setResponse(response, Code.NOT_SIGNATURE_TOKEN);
+            }
+            else if(Code.MALFORMED_TOKEN.getMessage().equals(message)){
+                setResponse(response, Code.MALFORMED_TOKEN);
+            }
         }
-
     }
 
     private void setResponse(HttpServletResponse response, Code errorCode) throws RuntimeException, IOException {

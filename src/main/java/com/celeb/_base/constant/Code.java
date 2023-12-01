@@ -25,8 +25,10 @@ public enum Code {
     EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
     EMPTY_USER(3007, HttpStatus.BAD_REQUEST, "User is empty"),
     INVALID_PASSWORD(3008,HttpStatus.BAD_REQUEST, "Password is invalid"),
-    EXPIRED_TOKEN(3009, HttpStatus.BAD_REQUEST, "Token is expired"),
+    EXPIRED_TOKEN(3009, HttpStatus.BAD_REQUEST, "만료된 JWT 토큰입니다"),
     NOT_SUPPORTED_TOKEN(3010,HttpStatus.BAD_REQUEST, "지원되지 않는 JWT 토큰입니다"),
+    NOT_SIGNATURE_TOKEN(3011,HttpStatus.BAD_REQUEST, "시그니처 검증에 실패한 JWT 토큰입니다"),
+    MALFORMED_TOKEN(3012,HttpStatus.BAD_REQUEST, "손상된 JWT 토큰입니다"),
 
     // Influencer
     NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "셀럽을 찾을 수 없습니다."),

@@ -2,7 +2,6 @@ package com.celeb.user;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
-import com.celeb.security.jwt.JwtService;
 import com.celeb.security.jwt.JwtTokenUtil;
 import com.celeb.security.jwt.Token;
 import io.micrometer.common.util.StringUtils;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -62,10 +60,8 @@ public class UserService {
         }
 
         String accessToken = JwtTokenUtil.createAccessToken(email);
-        String refreshToken = JwtTokenUtil.createRefreshToken(email);
-        jwtService.save(refreshToken);
 
-        Token token = new Token(accessToken, refreshToken);
+        Token token = new Token(accessToken);
 
         return token;
     }
