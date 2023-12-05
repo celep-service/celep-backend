@@ -3,6 +3,7 @@ package com.celeb.user;
 import com.celeb._base.dto.DataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,13 +20,13 @@ public class UserController {
 
     @Operation(summary = "회원정보 생성", description = "회원 정보를 생성합니다.")
     @PostMapping("")
-    public DataResponseDto<Object> createUsers(@RequestBody UserDto userDto) {
+    public DataResponseDto<Object> createUsers(@Valid @RequestBody UserDto userDto) {
         return DataResponseDto.of(userService.createUser(userDto));
     }
 
     @Operation(summary = "로그인 토큰 생성", description = "Access Token을 생성합니다.")
     @PostMapping("/login")
-    public DataResponseDto<Object> login(@RequestBody LoginRequestDto loginRequestDto){
+    public DataResponseDto<Object> login(@Valid @RequestBody LoginRequestDto loginRequestDto){
         return DataResponseDto.of(userService.login(loginRequestDto));
     }
 }
