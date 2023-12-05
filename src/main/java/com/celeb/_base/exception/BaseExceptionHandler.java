@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
 @RestControllerAdvice(annotations = {RestController.class})
@@ -20,6 +21,14 @@ public class BaseExceptionHandler {
         String error = ex.getBindingResult().getFieldError().getDefaultMessage();
         return handleExceptionInternal(ex, Code.VALIDATION_ERROR, error);
 //        return handleExceptionInternal(ex, Code.VALIDATION_ERROR, request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
+        MethodArgumentTypeMismatchException ex,
+        WebRequest request) {
+        System.out.println("@@ error catch");
+        return handleExceptionInternal(ex, Code.TYPE_MISMATCH, request);
     }
 
 //    @ExceptionHandler
@@ -41,7 +50,7 @@ public class BaseExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(Exception e, Code errorCode,
         WebRequest request) {
         return ResponseEntity.internalServerError()
-            .body(ErrorResponseDto.of(errorCode, errorCode.getMessage(e)));
+            .body(ErrorResponseDto.of(errorCode, errorCode.getMessage()));
     }
 
     protected ResponseEntity<Object> handleExceptionInternal(Exception e, Code errorCode,

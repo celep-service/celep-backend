@@ -13,15 +13,23 @@ import org.springframework.http.HttpStatus;
 public enum Code {
     OK(200, HttpStatus.OK, "OK"),
     BAD_REQUEST(2000, HttpStatus.BAD_REQUEST, "Bad request"),
-    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "Validation error"),
+    VALIDATION_ERROR(2001, HttpStatus.BAD_REQUEST, "검증 에러가 발생하였습니다."),
+    TYPE_MISMATCH(2002, HttpStatus.BAD_REQUEST, "타입이 일치하지 않습니다."),
 
     // User
-    NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
-    EMPTY_EMAIL(3002, HttpStatus.BAD_REQUEST, "이메일을 입력해주세요."),
-    EMPTY_NAME(3003, HttpStatus.BAD_REQUEST, "이름을 입력해주세요."),
-    ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
-    EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "비밀번호를 입력해주세요"),
-    EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "성별을 입력해주세요."),
+
+    NOT_FOUND_USER(3001, HttpStatus.NOT_FOUND, "User not found"),
+    EMPTY_EMAIL(3002, HttpStatus.BAD_REQUEST, "Email is empty"),
+    EMPTY_NAME(3003, HttpStatus.BAD_REQUEST, "Name is empty"),
+    ALREADY_EXISTS_USER(3004, HttpStatus.BAD_REQUEST, "Already exists user"),
+    EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
+    EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
+    EMPTY_USER(3007, HttpStatus.BAD_REQUEST, "User is empty"),
+    INVALID_PASSWORD(3008,HttpStatus.BAD_REQUEST, "Password is invalid"),
+    EXPIRED_TOKEN(3009, HttpStatus.BAD_REQUEST, "만료된 JWT 토큰입니다"),
+    NOT_SUPPORTED_TOKEN(3010,HttpStatus.BAD_REQUEST, "지원되지 않는 JWT 토큰입니다"),
+    NOT_SIGNATURE_TOKEN(3011,HttpStatus.BAD_REQUEST, "시그니처 검증에 실패한 JWT 토큰입니다"),
+    MALFORMED_TOKEN(3012,HttpStatus.BAD_REQUEST, "손상된 JWT 토큰입니다"),
 
     // Influencer
     NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "셀럽을 찾을 수 없습니다."),
