@@ -3,6 +3,7 @@ package com.celeb.post;
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.constant.StatusEnum;
+import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
@@ -73,7 +74,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto createPost(PostDto postDto) {
+    public EntityIdResponseDto createPost(PostDto postDto) {
 
         // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
         // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
@@ -102,9 +103,9 @@ public class PostService {
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
         savedPost.setCodies(codyList);
 
-        PostDto returnPostDto = new PostDto();
-        returnPostDto.setId(savedPost.getId());
+        //PostDto returnPostDto = new PostDto();
+        //returnPostDto.setId(savedPost.getId());
 
-        return returnPostDto;
+        return new EntityIdResponseDto(savedPost.getId());
     }
 }
