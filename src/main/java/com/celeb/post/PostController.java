@@ -2,6 +2,7 @@ package com.celeb.post;
 
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.dto.DataResponseDto;
+import com.celeb._base.dto.EntityIdResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -11,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,7 @@ public class PostController {
         @Parameter(name = "size", description = "페이지 크기")
     })
     @GetMapping("")
-    public DataResponseDto<Object> getPosts(
+    public DataResponseDto<Slice<PostDto>> getPosts(
         // @Nullable @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -53,7 +55,7 @@ public class PostController {
 
     @Operation(summary = "포스트 정보 생성", description = "포스트를 생성합니다.")
     @PostMapping("")
-    public DataResponseDto<Object> createPost(@Valid @RequestBody PostDto postDto) {
+    public DataResponseDto<EntityIdResponseDto> createPost(@Valid @RequestBody PostDto postDto) {
         return DataResponseDto.of(postService.createPost(postDto));
     }
 

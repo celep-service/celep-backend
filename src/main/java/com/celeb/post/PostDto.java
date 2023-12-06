@@ -49,7 +49,7 @@ public class PostDto {
 
     // post시 clothesId를 받아서 저장하기 위한 변수
     @NotEmpty(message = "옷 정보를 입력해주세요.")
-    @Schema(description = "옷 정보를 입력해주세요.", example = "[1,2,3]")
+    @Schema(description = "옷 정보 리스트", example = "[1,2,3]")
     private List<Integer> clothesIdList;
 
     // post시 userId를 받아서 저장하기 위한 변수
@@ -75,7 +75,7 @@ public class PostDto {
 
     @NotEmpty(message = "성별을 입력해주세요.")
     @Pattern(regexp = "MALE|FEMALE", message = "성별은 MALE, FEMALE만 가능합니다.")
-    @Schema(description = "성별을 입력해주세요.", example = "MALE")
+    @Schema(description = "성별", example = "MALE")
     private String gender;
 
     public PostDto() {
