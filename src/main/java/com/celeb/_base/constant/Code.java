@@ -25,11 +25,12 @@ public enum Code {
     EMPTY_PASSWORD(3005, HttpStatus.BAD_REQUEST, "Password is empty"),
     EMPTY_GENDER(3006, HttpStatus.BAD_REQUEST, "Gender is empty"),
     EMPTY_USER(3007, HttpStatus.BAD_REQUEST, "User is empty"),
-    INVALID_PASSWORD(3008,HttpStatus.BAD_REQUEST, "Password is invalid"),
+    INVALID_PASSWORD(3008, HttpStatus.BAD_REQUEST, "Password is invalid"),
     EXPIRED_TOKEN(3009, HttpStatus.BAD_REQUEST, "만료된 JWT 토큰입니다"),
-    NOT_SUPPORTED_TOKEN(3010,HttpStatus.BAD_REQUEST, "지원되지 않는 JWT 토큰입니다"),
-    NOT_SIGNATURE_TOKEN(3011,HttpStatus.BAD_REQUEST, "시그니처 검증에 실패한 JWT 토큰입니다"),
-    MALFORMED_TOKEN(3012,HttpStatus.BAD_REQUEST, "손상된 JWT 토큰입니다"),
+    NOT_SUPPORTED_TOKEN(3010, HttpStatus.BAD_REQUEST, "지원되지 않는 JWT 토큰입니다"),
+    NOT_SIGNATURE_TOKEN(3011, HttpStatus.BAD_REQUEST, "시그니처 검증에 실패한 JWT 토큰입니다"),
+    MALFORMED_TOKEN(3012, HttpStatus.BAD_REQUEST, "손상된 JWT 토큰입니다"),
+    NOT_AUTHORIZED_USER(3013, HttpStatus.UNAUTHORIZED, "해당 동작을 수행할 권한이 없습니다"),
 
     // Influencer
     NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "셀럽을 찾을 수 없습니다."),
@@ -43,8 +44,7 @@ public enum Code {
     NOT_FOUND_POST(6001, HttpStatus.NOT_FOUND, "포스트를 찾을 수 없습니다."),
 
 
-    INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
-    ;
+    INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error");
 
     private final Integer code;
     private final HttpStatus httpStatus;

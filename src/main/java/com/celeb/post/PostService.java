@@ -12,6 +12,7 @@ import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
+import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -19,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -113,6 +116,22 @@ public class PostService {
     public EntityIdResponseDto deletePost(int postId) {
         Post post = postRepository.findById(postId).orElseThrow(() ->
             new GeneralException(Code.NOT_FOUND_POST));
+
+        // 확인: post의 status가 ACTIVE인 경우에만 삭제 가능하도록
+        if (!post.getStatus().equals(StatusEnum.ACTIVE.getStatus())) {
+            throw new GeneralException(Code.NOT_FOUND_POST);
+        }
+
+        // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 삭제 가능하도록
+        // 현재 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 인증된 사용자의 아이디 가져오기
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!currentUserId.equals(post.getUser().getId())) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+
         post.setStatus(StatusEnum.DELETED.getStatus());
         System.out.println("post.getStatus() = " + post.getStatus());
         return new EntityIdResponseDto(post.getId());
