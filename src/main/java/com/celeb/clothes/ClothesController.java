@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +28,14 @@ public class ClothesController {
 
     @Operation(summary = "옷 정보 생성", description = "옷 정보를 만듭니다.")
     @PostMapping("")
-    public DataResponseDto<Object> createClothes(@Valid @RequestBody ClothesDto clothesDto) {
+    public DataResponseDto<Clothes> createClothes(@Valid @RequestBody ClothesDto clothesDto) {
         return DataResponseDto.of(clothesService.createClothes(clothesDto));
     }
 
 
     @Operation(summary = "옷 정보 조회", description = "옷 정보를 가져옵니다.")
     @GetMapping("")
-    public DataResponseDto<Object> getClothesList(
+    public DataResponseDto<Slice<Clothes>> getClothesList(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @Nullable ClothesCategoryEnum clothesCategory) {

@@ -1,6 +1,7 @@
 package com.celeb.comment;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.post.Post;
 import com.celeb.post.PostRepository;
@@ -18,7 +19,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public CommentDto createComment(CommentDto commentDto) {
+    public EntityIdResponseDto createComment(CommentDto commentDto) {
         // userId로 User를 찾아서 commentDto에 set
         // postId로 Post를 찾아서 commentDto에 set
         Integer userId = commentDto.getUserId();
@@ -36,9 +37,9 @@ public class CommentService {
         Comment comment = commentDto.toEntity();
         commentRepository.save(comment);
 
-        CommentDto returnCommentDto = CommentDto.builder()
-            .id(comment.getId()).build();
-        return returnCommentDto;
+        //CommentDto returnCommentDto = CommentDto.builder()
+        //    .id(comment.getId()).build();
+        return new EntityIdResponseDto(comment.getId());
     }
 
     public List<CommentDto> getComments(Integer postId) {
