@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,12 @@ public class CommentController {
     @GetMapping("")
     public DataResponseDto<List<CommentDto>> getComments(@RequestParam Integer postId) {
         return DataResponseDto.of(commentService.getComments(postId));
+    }
+
+    @Operation(summary = "댓글 정보 삭제", description = "댓글 정보를 삭제합니다.")
+    @PatchMapping("{commentId}/delete")
+    public DataResponseDto<EntityIdResponseDto> deleteComment(@PathVariable Integer commentId) {
+        return DataResponseDto.of(commentService.deleteComment(commentId));
     }
 
 }

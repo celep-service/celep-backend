@@ -1,14 +1,19 @@
 package com.celeb.comment;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.constant.StatusEnum;
 import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.post.Post;
 import com.celeb.post.PostRepository;
+import com.celeb.security.CustomUserDetails;
 import com.celeb.user.User;
 import com.celeb.user.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,5 +58,24 @@ public class CommentService {
             .filter(comment -> comment.getStatus().equals("ACTIVE")).toList();
 
         return CommentDto.commentListResponse(activeCommentList);
+    }
+
+    @Transactional
+    public EntityIdResponseDto deleteComment(Integer commentId) {
+
+        // 댓글 유무 확인
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new GeneralException(Code.NOT_FOUND_COMMENT));
+        // 유저 권한 확인
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!comment.getUser().getId().equals(currentUserId)) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+        // 댓글 삭제
+        comment.setStatus(StatusEnum.DELETED.getStatus());
+
+        return new EntityIdResponseDto(comment.getId());
     }
 }
