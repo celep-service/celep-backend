@@ -37,13 +37,16 @@ public class SecurityConfig {
             .sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .addFilterBefore(new JwtTokenFilter(jwtTokenUtil), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtTokenFilter(jwtTokenUtil),
+                UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtExceptionFilter, JwtTokenFilter.class)
             .authorizeHttpRequests((authorizeRequests) ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.POST, "/posts/**",
                         "/clothes/**", "/comments/**").authenticated()
                     .requestMatchers("/bookmarks/**").authenticated()
+                    .requestMatchers(HttpMethod.PATCH, "/posts/**",
+                        "/clothes/**", "/comments/**").authenticated()
                     .anyRequest().permitAll()
             );
 

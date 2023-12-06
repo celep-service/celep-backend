@@ -3,6 +3,7 @@ package com.celeb.post;
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.constant.StatusEnum;
+import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
@@ -11,6 +12,7 @@ import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
+import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -18,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +39,7 @@ public class PostService {
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
         Integer userId, GenderEnum gender) {
+
         Specification<Post> spec = Specification.where(null);
 
         if (gender != null) {
@@ -73,12 +78,14 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto createPost(PostDto postDto) {
+    public EntityIdResponseDto createPost(PostDto postDto) {
 
-        // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
-        // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        // 현재 로그인한 사용자의 id를 가져와서 postDto에 저장
         postDto.setUser(
-            userRepository.findById(postDto.getUserId()).orElseThrow(() ->
+            userRepository.findById(currentUserId).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));
 
         postDto.setCeleb(
@@ -102,9 +109,36 @@ public class PostService {
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
         savedPost.setCodies(codyList);
 
-        PostDto returnPostDto = new PostDto();
-        returnPostDto.setId(savedPost.getId());
+        //PostDto returnPostDto = new PostDto();
+        //returnPostDto.setId(savedPost.getId());
 
-        return returnPostDto;
+        return new EntityIdResponseDto(savedPost.getId());
     }
+
+    @Transactional
+    public EntityIdResponseDto deletePost(int postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+            new GeneralException(Code.NOT_FOUND_POST));
+
+        // 확인: post의 status가 ACTIVE인 경우에만 삭제 가능하도록
+        if (!post.getStatus().equals(StatusEnum.ACTIVE.getStatus())) {
+            throw new GeneralException(Code.NOT_FOUND_POST);
+        }
+
+        // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 삭제 가능하도록
+        // 현재 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 인증된 사용자의 아이디 가져오기
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!currentUserId.equals(post.getUser().getId())) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+
+        post.setStatus(StatusEnum.DELETED.getStatus());
+        System.out.println("post.getStatus() = " + post.getStatus());
+        return new EntityIdResponseDto(post.getId());
+
+    }
+
 }
