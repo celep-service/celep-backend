@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +60,13 @@ public class PostController {
     public DataResponseDto<EntityIdResponseDto> createPost(@Valid @RequestBody PostDto postDto) {
         return DataResponseDto.of(postService.createPost(postDto));
     }
+
+    @Operation(summary = "포스트 삭제", description = "포스트를 삭제합니다.")
+    @PatchMapping("/{postId}/delete")
+    public DataResponseDto<EntityIdResponseDto> createPost(@PathVariable int postId) {
+        return DataResponseDto.of(postService.deletePost(postId));
+    }
+
+    // editPost는 clothes와 cody를 수정하는 것이므로 clothes와 cody의 수정 API를 만들어야 함.
 
 }

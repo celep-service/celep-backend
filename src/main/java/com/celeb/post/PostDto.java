@@ -53,8 +53,8 @@ public class PostDto {
     private List<Integer> clothesIdList;
 
     // post시 userId를 받아서 저장하기 위한 변수
-    @Schema(description = "유저 아이디", example = "1")
-    private Integer userId;
+    // @Schema(description = "유저 아이디", example = "1")
+    // private Integer userId;
 
     // post시 influencerId를 받아서 저장하기 위한 변수
     @NotNull(message = "셀럽을 입력해주세요.")
