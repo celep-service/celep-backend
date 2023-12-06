@@ -27,7 +27,10 @@ public class CommentService {
     public EntityIdResponseDto createComment(CommentDto commentDto) {
         // userId로 User를 찾아서 commentDto에 set
         // postId로 Post를 찾아서 commentDto에 set
-        Integer userId = commentDto.getUserId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        Integer userId = currentUserId;
         Integer postId = commentDto.getPostId();
 
         User user = userRepository.findById(userId)
@@ -62,7 +65,6 @@ public class CommentService {
 
     @Transactional
     public EntityIdResponseDto deleteComment(Integer commentId) {
-
         // 댓글 유무 확인
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new GeneralException(Code.NOT_FOUND_COMMENT));

@@ -35,7 +35,8 @@ public class CommentDto {
     @Hidden
     private String status;
 
-    @Schema(description = "유저 아이디", example = "1")
+    //    @Schema(description = "유저 아이디", example = "1")
+    @Hidden
     private Integer userId;
     @Schema(description = "포스트 아이디", example = "1")
     private Integer postId;
