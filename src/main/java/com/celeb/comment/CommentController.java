@@ -4,6 +4,7 @@ import com.celeb._base.dto.DataResponseDto;
 import com.celeb._base.dto.EntityIdResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,4 +42,10 @@ public class CommentController {
         return DataResponseDto.of(commentService.deleteComment(commentId));
     }
 
+    @Operation(summary = "댓글 정보 수정", description = "댓글 정보를 수정합니다.")
+    @PatchMapping("{commentId}")
+    public DataResponseDto<EntityIdResponseDto> editComment(
+        @Valid @RequestBody String content, @PathVariable Integer commentId) {
+        return DataResponseDto.of(commentService.editComment(content, commentId));
+    }
 }

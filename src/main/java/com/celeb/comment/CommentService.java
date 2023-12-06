@@ -80,4 +80,22 @@ public class CommentService {
 
         return new EntityIdResponseDto(comment.getId());
     }
+
+    @Transactional
+    public EntityIdResponseDto editComment(String content, Integer commentId) {
+
+        // 댓글 유무 확인
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new GeneralException(Code.NOT_FOUND_COMMENT));
+        // 유저 권한 확인
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!comment.getUser().getId().equals(currentUserId)) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+        // 댓글 수정
+        comment.setContent(content);
+        return new EntityIdResponseDto(comment.getId());
+    }
 }
