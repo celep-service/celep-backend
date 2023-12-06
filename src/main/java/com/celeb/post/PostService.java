@@ -39,6 +39,7 @@ public class PostService {
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
         Integer userId, GenderEnum gender) {
+
         Specification<Post> spec = Specification.where(null);
 
         if (gender != null) {
@@ -79,10 +80,12 @@ public class PostService {
     @Transactional
     public EntityIdResponseDto createPost(PostDto postDto) {
 
-        // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
-        // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        // 현재 로그인한 사용자의 id를 가져와서 postDto에 저장
         postDto.setUser(
-            userRepository.findById(postDto.getUserId()).orElseThrow(() ->
+            userRepository.findById(currentUserId).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));
 
         postDto.setCeleb(
