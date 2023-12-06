@@ -44,7 +44,9 @@ public enum Code {
     NOT_FOUND_POST(6001, HttpStatus.NOT_FOUND, "포스트를 찾을 수 없습니다."),
 
 
-    INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error");
+    INTERNAL_ERROR(5000, HttpStatus.INTERNAL_SERVER_ERROR, "Internal error"),
+
+    NOT_FOUND_COMMENT(7001, HttpStatus.NOT_FOUND, "Comment not found");
 
     private final Integer code;
     private final HttpStatus httpStatus;
