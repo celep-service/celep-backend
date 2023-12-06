@@ -108,4 +108,15 @@ public class PostService {
 
         return new EntityIdResponseDto(savedPost.getId());
     }
+
+    @Transactional
+    public EntityIdResponseDto deletePost(int postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+            new GeneralException(Code.NOT_FOUND_POST));
+        post.setStatus(StatusEnum.DELETED.getStatus());
+        System.out.println("post.getStatus() = " + post.getStatus());
+        return new EntityIdResponseDto(post.getId());
+
+    }
+
 }
