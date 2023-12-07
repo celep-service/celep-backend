@@ -3,6 +3,7 @@ package com.celeb.post;
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.dto.DataResponseDto;
 import com.celeb._base.dto.EntityIdResponseDto;
+import com.celeb.comment.dto.EditCommentRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -63,10 +64,17 @@ public class PostController {
 
     @Operation(summary = "포스트 삭제", description = "포스트를 삭제합니다.")
     @PatchMapping("/{postId}/delete")
-    public DataResponseDto<EntityIdResponseDto> createPost(@PathVariable int postId) {
+    public DataResponseDto<EntityIdResponseDto> deletePost(@PathVariable int postId) {
         return DataResponseDto.of(postService.deletePost(postId));
     }
 
     // editPost는 clothes와 cody를 수정하는 것이므로 clothes와 cody의 수정 API를 만들어야 함.
+    @Operation(summary = "포스트 수정", description = "포스트를 수정합니다. 필요한 인자만 보내면 해당 항목들만 수정됩니다.")
+    @PatchMapping("/{postId}/edit")
+    public DataResponseDto<EntityIdResponseDto> editPost(
+        @Valid @RequestBody EditCommentRequestDto editCommentRequestDto) {
+        return DataResponseDto.of(postService.editPost(editCommentRequestDto));
+    }
+
 
 }
