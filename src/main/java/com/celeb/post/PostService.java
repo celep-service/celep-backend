@@ -12,6 +12,7 @@ import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
+import com.celeb.comment.dto.EditCommentRequestDto;
 import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -141,4 +142,44 @@ public class PostService {
 
     }
 
+    // @Transactional
+    public EntityIdResponseDto editPost(EditCommentRequestDto editCommentRequestDto) {
+        // 조회: 포스트 확인
+        Post post = postRepository.findById(editCommentRequestDto.getPostId()).orElseThrow(() ->
+            new GeneralException(Code.NOT_FOUND_POST));
+
+        // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 수정 가능하도록
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 인증된 사용자의 아이디 가져오기
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!currentUserId.equals(post.getUser().getId())) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+
+        // 수정: post 수정
+        if (editCommentRequestDto.getContent() != null) {
+            post.setTitle(editCommentRequestDto.getContent());
+        }
+        if (editCommentRequestDto.getImageUrl() != null) {
+            post.setImageUrl(editCommentRequestDto.getImageUrl());
+        }
+        if (editCommentRequestDto.getClothesIdList() != null) {
+            List<Clothes> clothesList = clothesRepository.findAllById(
+                editCommentRequestDto.getClothesIdList());
+            if (clothesList.size() != editCommentRequestDto.getClothesIdList().size()) {
+                throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+            }
+
+            List<Cody> codyList = codyService.saveCody(post, clothesList);
+            post.setCodies(codyList);
+        }
+        if (editCommentRequestDto.getGender() != null) {
+            post.setGender(GenderEnum.valueOf(editCommentRequestDto.getGender()));
+        }
+
+        // 변경사항 한번에 저장
+        postRepository.save(post);
+        return new EntityIdResponseDto(post.getId());
+    }
 }
