@@ -11,9 +11,11 @@ import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Comment extends BaseTimeEntity {
 
@@ -28,12 +30,15 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne
     private Post post;
 
+    private String status;
+
 
     @Builder
-    public Comment(Integer id, String content, User user, Post post) {
+    public Comment(Integer id, String content, User user, Post post, String status) {
         this.id = id;
         this.content = content;
         this.user = user;
         this.post = post;
+        this.status = status;
     }
 }

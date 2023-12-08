@@ -24,13 +24,21 @@ repositories {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
-
+    implementation ("org.springframework.boot:spring-boot-starter-security")
+    testImplementation ("org.springframework.security:spring-security-test")
+    implementation ("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly ("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly ("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation("org.json:json:20160810")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
 tasks.withType<Test> {

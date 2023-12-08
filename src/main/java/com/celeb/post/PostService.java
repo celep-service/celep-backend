@@ -2,6 +2,8 @@ package com.celeb.post;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
+import com.celeb._base.constant.StatusEnum;
+import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.celeb.CelebCategoryEnum;
 import com.celeb.celeb.CelebRepository;
@@ -10,6 +12,8 @@ import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
+import com.celeb.comment.dto.EditCommentRequestDto;
+import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -17,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,14 +39,15 @@ public class PostService {
     private final CelebRepository celebRepository;
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
-        Integer userId, String gender) {
+        Integer userId, GenderEnum gender) {
+
         Specification<Post> spec = Specification.where(null);
 
         if (gender != null) {
-            GenderEnum genderEnum = GenderEnum.valueOf(gender.toUpperCase());
+
             spec = spec.and(
                 (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("gender"),
-                    genderEnum)
+                    gender)
             );
         }
         if (userId != null) {
@@ -61,18 +68,25 @@ public class PostService {
                 root.get("celeb").get("celebCategory"), CelebCategoryEnum.valueOf(celebCategory)));
         }
 
+        // 추가: status 값이 "ACTIVE"인 경우만 필터링
+        spec = spec.and((root, query, criteriaBuilder) ->
+            criteriaBuilder.equal(root.get("status"), StatusEnum.ACTIVE.getStatus())
+        );
+
         Slice<Post> postsResponse = postRepository.findAll(spec, pageable);
 
         return PostDto.postListResponse(postsResponse);
     }
 
     @Transactional
-    public PostDto createPost(PostDto postDto) {
+    public EntityIdResponseDto createPost(PostDto postDto) {
 
-        // jwt기능이 구현된다면 config단에서 user정보를 가져올 수 있을 것
-        // 그러나 지금은 그렇지 않으므로 user정보를 가져오는 과정이 필요함
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        // 현재 로그인한 사용자의 id를 가져와서 postDto에 저장
         postDto.setUser(
-            userRepository.findById(postDto.getUserId()).orElseThrow(() ->
+            userRepository.findById(currentUserId).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_USER)));
 
         postDto.setCeleb(
@@ -89,18 +103,83 @@ public class PostService {
 
         // 옷 찾기
         List<Clothes> clothesList = clothesRepository.findAllById(postDto.getClothesIdList());
-        postDto.getClothesIdList().forEach(
-            clothes -> clothesRepository.findById(clothes).orElseThrow(() ->
-                new GeneralException(Code.NOT_FOUND_CLOTHES))
-        );
+        if (clothesList.size() != postDto.getClothesIdList().size()) {
+            throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+        }
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
-
         savedPost.setCodies(codyList);
 
-        PostDto returnPostDto = new PostDto();
-        returnPostDto.setId(savedPost.getId());
+        //PostDto returnPostDto = new PostDto();
+        //returnPostDto.setId(savedPost.getId());
 
-        return returnPostDto;
+        return new EntityIdResponseDto(savedPost.getId());
+    }
+
+    @Transactional
+    public EntityIdResponseDto deletePost(int postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+            new GeneralException(Code.NOT_FOUND_POST));
+
+        // 확인: post의 status가 ACTIVE인 경우에만 삭제 가능하도록
+        if (!post.getStatus().equals(StatusEnum.ACTIVE.getStatus())) {
+            throw new GeneralException(Code.NOT_FOUND_POST);
+        }
+
+        // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 삭제 가능하도록
+        // 현재 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 인증된 사용자의 아이디 가져오기
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!currentUserId.equals(post.getUser().getId())) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+
+        post.setStatus(StatusEnum.DELETED.getStatus());
+        System.out.println("post.getStatus() = " + post.getStatus());
+        return new EntityIdResponseDto(post.getId());
+
+    }
+
+    // @Transactional
+    public EntityIdResponseDto editPost(EditCommentRequestDto editCommentRequestDto) {
+        // 조회: 포스트 확인
+        Post post = postRepository.findById(editCommentRequestDto.getPostId()).orElseThrow(() ->
+            new GeneralException(Code.NOT_FOUND_POST));
+
+        // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 수정 가능하도록
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 인증된 사용자의 아이디 가져오기
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        if (!currentUserId.equals(post.getUser().getId())) {
+            throw new GeneralException(Code.NOT_AUTHORIZED_USER);
+        }
+
+        // 수정: post 수정
+        if (editCommentRequestDto.getContent() != null) {
+            post.setTitle(editCommentRequestDto.getContent());
+        }
+        if (editCommentRequestDto.getImageUrl() != null) {
+            post.setImageUrl(editCommentRequestDto.getImageUrl());
+        }
+        if (editCommentRequestDto.getClothesIdList() != null) {
+            List<Clothes> clothesList = clothesRepository.findAllById(
+                editCommentRequestDto.getClothesIdList());
+            if (clothesList.size() != editCommentRequestDto.getClothesIdList().size()) {
+                throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+            }
+
+            List<Cody> codyList = codyService.saveCody(post, clothesList);
+            post.setCodies(codyList);
+        }
+        if (editCommentRequestDto.getGender() != null) {
+            post.setGender(GenderEnum.valueOf(editCommentRequestDto.getGender()));
+        }
+
+        // 변경사항 한번에 저장
+        postRepository.save(post);
+        return new EntityIdResponseDto(post.getId());
     }
 }
