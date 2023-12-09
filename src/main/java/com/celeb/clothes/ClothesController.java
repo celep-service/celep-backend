@@ -43,5 +43,4 @@ public class ClothesController {
         return DataResponseDto.of(clothesService.getClothesList(pageable, clothesCategory));
     }
 
-
 }
