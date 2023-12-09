@@ -1,4 +1,4 @@
-package com.celeb.comment.dto;
+package com.celeb.post.dto;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 
 @Data
-public class EditCommentRequestDto {
+public class EditPostRequestDto {
 
     @Hidden
     private Integer userId;

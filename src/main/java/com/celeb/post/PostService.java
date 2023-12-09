@@ -12,7 +12,7 @@ import com.celeb.clothes.ClothesRepository;
 import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
-import com.celeb.comment.dto.EditCommentRequestDto;
+import com.celeb.post.dto.EditPostRequestDto;
 import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -143,9 +143,9 @@ public class PostService {
     }
 
     // @Transactional
-    public EntityIdResponseDto editPost(EditCommentRequestDto editCommentRequestDto) {
+    public EntityIdResponseDto editPost(EditPostRequestDto editPostRequestDto) {
         // 조회: 포스트 확인
-        Post post = postRepository.findById(editCommentRequestDto.getPostId()).orElseThrow(() ->
+        Post post = postRepository.findById(editPostRequestDto.getPostId()).orElseThrow(() ->
             new GeneralException(Code.NOT_FOUND_POST));
 
         // 인가: post의 user와 현재 로그인한 user가 같은 경우에만 수정 가능하도록
@@ -158,24 +158,24 @@ public class PostService {
         }
 
         // 수정: post 수정
-        if (editCommentRequestDto.getContent() != null) {
-            post.setTitle(editCommentRequestDto.getContent());
+        if (editPostRequestDto.getContent() != null) {
+            post.setTitle(editPostRequestDto.getContent());
         }
-        if (editCommentRequestDto.getImageUrl() != null) {
-            post.setImageUrl(editCommentRequestDto.getImageUrl());
+        if (editPostRequestDto.getImageUrl() != null) {
+            post.setImageUrl(editPostRequestDto.getImageUrl());
         }
-        if (editCommentRequestDto.getClothesIdList() != null) {
+        if (editPostRequestDto.getClothesIdList() != null) {
             List<Clothes> clothesList = clothesRepository.findAllById(
-                editCommentRequestDto.getClothesIdList());
-            if (clothesList.size() != editCommentRequestDto.getClothesIdList().size()) {
+                editPostRequestDto.getClothesIdList());
+            if (clothesList.size() != editPostRequestDto.getClothesIdList().size()) {
                 throw new GeneralException(Code.NOT_FOUND_CLOTHES);
             }
 
             List<Cody> codyList = codyService.saveCody(post, clothesList);
             post.setCodies(codyList);
         }
-        if (editCommentRequestDto.getGender() != null) {
-            post.setGender(GenderEnum.valueOf(editCommentRequestDto.getGender()));
+        if (editPostRequestDto.getGender() != null) {
+            post.setGender(GenderEnum.valueOf(editPostRequestDto.getGender()));
         }
 
         // 변경사항 한번에 저장
