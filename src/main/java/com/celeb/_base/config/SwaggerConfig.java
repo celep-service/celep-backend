@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,10 +27,14 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
+
+        Server prodServer = new Server().url("https://service-api.celep.shop");
+
         return new OpenAPI()
             //.components(new Components())
             .addSecurityItem(securityRequirement)
             .components(components)
+            .servers(Arrays.asList(prodServer)) // 서버 URL 설정
             .info(apiInfo());
     }
 
