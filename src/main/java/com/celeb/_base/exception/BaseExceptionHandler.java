@@ -3,6 +3,7 @@ package com.celeb._base.exception;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.dto.ErrorResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,12 +13,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 
+@Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
 public class BaseExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
         WebRequest request) {
+        log.warn("Validation error: {}", ex.getMessage());
         String error = ex.getBindingResult().getFieldError().getDefaultMessage();
         return handleExceptionInternal(ex, Code.VALIDATION_ERROR, error);
 //        return handleExceptionInternal(ex, Code.VALIDATION_ERROR, request);
@@ -27,7 +30,7 @@ public class BaseExceptionHandler {
     public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(
         MethodArgumentTypeMismatchException ex,
         WebRequest request) {
-        System.out.println("@@ error catch");
+        log.warn("Type mismatch error: {}", ex.getMessage());
         return handleExceptionInternal(ex, Code.TYPE_MISMATCH, request);
     }
 
@@ -38,6 +41,7 @@ public class BaseExceptionHandler {
 
     @ExceptionHandler(GeneralException.class)
     public ResponseEntity<Object> general(GeneralException e, WebRequest request) {
+        log.warn("General error: {}", e.getMessage());
         return handleExceptionInternal(e, e.getErrorCode(), request);
     }
 
