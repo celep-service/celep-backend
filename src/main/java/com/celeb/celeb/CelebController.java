@@ -6,12 +6,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +44,12 @@ public class CelebController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return DataResponseDto.of(
             celebService.getCelebs(pageable, celebCategory, search));
+    }
+
+    @Operation(summary = "셀럽 정보 생성", description = "셀럽 정보를 생성합니다.")
+    @PostMapping("")
+    public DataResponseDto<CelebDto> createCeleb(@Valid CelebDto celebDto) {
+        return DataResponseDto.of(celebService.createCeleb(celebDto));
     }
 
 
