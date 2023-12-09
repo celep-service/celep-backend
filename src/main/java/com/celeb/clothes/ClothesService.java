@@ -13,7 +13,7 @@ public class ClothesService {
 
     private final ClothesRepository clothesRepository;
 
-    public Object createClothes(ClothesDto clothesDto) {
+    public Clothes createClothes(ClothesDto clothesDto) {
         System.out.println("working");
         Clothes clothes;
         try {

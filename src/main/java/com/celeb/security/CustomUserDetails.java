@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
+
     private final User user;
 
     @Override
@@ -25,6 +26,11 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
+    public Integer getUserId() {
+        return user.getId();
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
