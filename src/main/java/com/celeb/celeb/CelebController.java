@@ -1,6 +1,7 @@
 package com.celeb.celeb;
 
 import com.celeb._base.dto.DataResponseDto;
+import com.celeb.celeb.dto.EditCelebRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,8 +51,15 @@ public class CelebController {
 
     @Operation(summary = "셀럽 정보 생성", description = "셀럽 정보를 생성합니다.")
     @PostMapping("")
-    public DataResponseDto<CelebDto> createCeleb(@Valid CelebDto celebDto) {
+    public DataResponseDto<CelebDto> createCeleb(@Valid @RequestBody CelebDto celebDto) {
         return DataResponseDto.of(celebService.createCeleb(celebDto));
+    }
+
+    @Operation(summary = "셀럽 정보 수정", description = "셀럽 정보를 수정합니다. 수정할 정보만 입력해주세요.")
+    @PatchMapping("")
+    public DataResponseDto<CelebDto> editCeleb(
+        @Valid @RequestBody EditCelebRequestDto editCelebRequestDto) {
+        return DataResponseDto.of(celebService.editCeleb(editCelebRequestDto));
     }
 
 

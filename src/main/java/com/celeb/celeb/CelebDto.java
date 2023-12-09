@@ -21,7 +21,7 @@ public class CelebDto {
     private String name;
     private String imageUrl;
     @Pattern(regexp = "TALENT|MODEL|SINGER|ACTOR|INFLUENCER|ETC", message = "셀럽 카테고리는 TALENT|MODEL|SINGER|ACTOR|INFLUENCER|ETC만 가능합니다.")
-    @Schema(description = "성별", example = "MALE")
+    @Schema(description = "셀럽 카테고리", example = "TALENT")
     private String celebCategory;
 
     public CelebDto(Celeb celeb) {
