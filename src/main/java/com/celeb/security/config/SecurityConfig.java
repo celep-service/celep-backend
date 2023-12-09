@@ -51,7 +51,8 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PATCH, "/posts/**",
                         "/clothes/**", "/comments/**").authenticated()
                     .anyRequest().permitAll()
-            );
+            )
+            .cors((cors) -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
