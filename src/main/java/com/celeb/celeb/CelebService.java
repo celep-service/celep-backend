@@ -2,7 +2,11 @@ package com.celeb.celeb;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
+import com.celeb.post.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,4 +31,29 @@ public class CelebService {
 
     }
 
+    public Slice<Celeb> getCelebs(Pageable pageable, String celebCategory, String search) {
+        Specification<Post> spec = Specification.where(null);
+        if (search != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("name"), "%" + search + "%")
+                )
+            );
+        }
+
+        if (celebCategory != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.or(
+                    criteriaBuilder.equal(root.get("celebCategory"),
+                        CelebCategoryEnum.valueOf(celebCategory))
+                )
+            );
+        }
+
+        Slice<Celeb> celebsResponse = celebRepository.findAll(spec, pageable);
+
+        return celebsResponse;
+
+
+    }
 }
