@@ -70,7 +70,7 @@ public class PostController {
 
     // editPost는 clothes와 cody를 수정하는 것이므로 clothes와 cody의 수정 API를 만들어야 함.
     @Operation(summary = "포스트 수정", description = "포스트를 수정합니다. 필요한 인자만 보내면 해당 항목들만 수정됩니다.")
-    @PatchMapping("/")
+    @PatchMapping("")
     public DataResponseDto<EntityIdResponseDto> editPost(
         @Valid @RequestBody EditPostRequestDto editPostRequestDto) {
         return DataResponseDto.of(postService.editPost(editPostRequestDto));
