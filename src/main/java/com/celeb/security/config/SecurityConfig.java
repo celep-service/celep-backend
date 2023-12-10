@@ -45,7 +45,6 @@ public class SecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtTokenFilter.class)
             .authorizeHttpRequests((authorizeRequests) ->
                 authorizeRequests
-                    .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/posts/**",
                         "/clothes/**", "/comments/**").authenticated()
                     .requestMatchers("/bookmarks/**").authenticated()
@@ -63,6 +62,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("https://celep.shop");
+        configuration.addAllowedOrigin("https://service-api.celep.shop");
         configuration.addAllowedOrigin("http://localhost:8080");
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
