@@ -2,3 +2,4 @@
 /.idea/
 /build/
 /src/test/java/com/celeb/DummyData.java
+src/main/resources/application.yml
