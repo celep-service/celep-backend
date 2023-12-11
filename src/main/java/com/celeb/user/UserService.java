@@ -8,6 +8,7 @@ import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenUtil jwtTokenUtil;
 
     public UserDto createUser(UserDto userDto) {
 
@@ -59,7 +61,7 @@ public class UserService {
             throw new GeneralException(Code.INVALID_PASSWORD);
         }
 
-        String accessToken = JwtTokenUtil.createAccessToken(email);
+        String accessToken = jwtTokenUtil.createAccessToken(email);
 
         Token token = new Token(accessToken);
 

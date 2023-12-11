@@ -17,22 +17,33 @@ import java.util.Collections;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 
-@RequiredArgsConstructor
 @Component
 @Slf4j
 public class JwtTokenUtil {
 
 
-    private static final String secretKey = "cyd-celep-donghun-changhyun-eunchae";
+    //private static final String secretKey = "cyd-celep-donghun-changhyun-eunchae";
+
+
+    private final String secretKey;
 
     private final CustomUserDetailsService customUserDetailsService;
 
-    public static String createAccessToken(String email) {
+    public JwtTokenUtil(@Value("${jwt.secret}") String secretKey,
+        CustomUserDetailsService customUserDetailsService){
+        this.secretKey = secretKey;
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
+    public String createAccessToken(String email) {
+        log.info("secretKey: {}", secretKey);
+        System.out.println("secretKey: " + secretKey);
         Claims claims = Jwts.claims();
         claims.put("email", email);
         long expireTimeMs = 4 * 1000 * 60 * 60; // 4시간
@@ -51,7 +62,7 @@ public class JwtTokenUtil {
         return new UsernamePasswordAuthenticationToken(userDetails, "", Collections.emptyList());
     }
 
-    public static String getEmail(String token) {
+    public String getEmail(String token) {
         return extractClaims(token).get("email").toString();
     }
 
@@ -69,7 +80,7 @@ public class JwtTokenUtil {
         }
     }
 
-    private static Claims extractClaims(String token) {
+    private Claims extractClaims(String token) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
