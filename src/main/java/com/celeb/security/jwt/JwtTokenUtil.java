@@ -42,8 +42,6 @@ public class JwtTokenUtil {
     }
 
     public String createAccessToken(String email) {
-        log.info("secretKey: {}", secretKey);
-        System.out.println("secretKey: " + secretKey);
         Claims claims = Jwts.claims();
         claims.put("email", email);
         long expireTimeMs = 4 * 1000 * 60 * 60; // 4시간
