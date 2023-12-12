@@ -20,6 +20,6 @@ else
 fi
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/deploy/deploy.log
+echo "$(date '+%Y-%m-%d %H:%M:%S') > DEPLOY_JAR 배포" >> /home/ubuntu/deploy/deploy.log
 nohup java -Dfile.encoding=UTF-8 -jar \
-  $DEPLOY_JAR >> /home/ubuntu/deploy/deploy.log 2>/home/ubuntu/deploy/deploy_err.log &
+  $DEPLOY_JAR >> /dev/null 2>/home/ubuntu/deploy/deploy_err.log &
