@@ -44,9 +44,10 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         }
     }
 
-    private void setResponse(HttpServletResponse response, Code errorCode) throws RuntimeException, IOException {
+    private void setResponse(HttpServletResponse response, Code errorCode)
+        throws RuntimeException, IOException {
         JSONObject responseJson = new JSONObject();
-
+        responseJson.put("isSuccess", false);
         responseJson.put("code", errorCode.getCode());
         responseJson.put("message", errorCode.getMessage());
 
