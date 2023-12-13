@@ -18,27 +18,26 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor
 public class JwtExceptionFilter extends OncePerRequestFilter {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
     Map<String, String> map = new HashMap<>();
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
         response.setCharacterEncoding("utf-8");
-        try{
+        try {
             filterChain.doFilter(request, response);
         } catch (JwtException ex) {
             String message = ex.getMessage();
             //토큰 만료된 경우
-            if(Code.EXPIRED_TOKEN.getMessage().equals(message)) {
+            if (Code.EXPIRED_TOKEN.getMessage().equals(message)) {
                 setResponse(response, Code.EXPIRED_TOKEN);
-            }
-            else if(Code.NOT_SUPPORTED_TOKEN.getMessage().equals(message)){
+            } else if (Code.NOT_SUPPORTED_TOKEN.getMessage().equals(message)) {
                 setResponse(response, Code.NOT_SUPPORTED_TOKEN);
-            }
-            else if(Code.NOT_SIGNATURE_TOKEN.getMessage().equals(message)){
+            } else if (Code.NOT_SIGNATURE_TOKEN.getMessage().equals(message)) {
                 setResponse(response, Code.NOT_SIGNATURE_TOKEN);
-            }
-            else if(Code.MALFORMED_TOKEN.getMessage().equals(message)){
+            } else if (Code.MALFORMED_TOKEN.getMessage().equals(message)) {
                 setResponse(response, Code.MALFORMED_TOKEN);
             }
         }
