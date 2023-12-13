@@ -41,10 +41,9 @@ public class JwtTokenUtil {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String email, long expireTimeMs) {
         Claims claims = Jwts.claims();
         claims.put("email", email);
-        long expireTimeMs = 4 * 1000 * 60 * 60; // 4시간
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
@@ -53,6 +52,37 @@ public class JwtTokenUtil {
             .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
             .signWith(key, SignatureAlgorithm.HS256)
             .compact();
+    }
+
+    public String createRefreshToken(String email, long expireTimeMs) {
+        Claims claims = Jwts.claims();
+        claims.put("email", email);
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
+            .signWith(key, SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    public TokenDto generateJwt(String email) {
+        long now = (new Date()).getTime();
+
+        long refreshTokenExpireTimeMs = 1000 * 60 * 60 * 24 * 30L; // 30일
+        long accessTokenExpireTimeMs = 4 * 1000 * 60 * 60; // 4시간
+
+        String accessToken = createAccessToken(email, accessTokenExpireTimeMs);
+        String refreshToken = createRefreshToken(email, refreshTokenExpireTimeMs);
+
+
+
+        return TokenDto.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .refreshTokenExpiresIn(refreshTokenExpireTimeMs)
+            .build();
     }
 
     public Authentication getAuthentication(String token) {

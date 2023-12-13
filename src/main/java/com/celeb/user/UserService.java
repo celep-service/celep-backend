@@ -4,11 +4,11 @@ import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.security.jwt.JwtTokenUtil;
 import com.celeb.security.jwt.Token;
+import com.celeb.security.jwt.TokenDto;
+import com.celeb.security.jwt.TokenRepository;
 import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final TokenRepository tokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -48,7 +50,7 @@ public class UserService {
         return UserDto.userSignUpResponse(savedUser);
     }
 
-    public Token login(LoginRequestDto loginRequestDto){
+    public TokenDto login(LoginRequestDto loginRequestDto){
 
         String email = loginRequestDto.getEmail();
         String password = loginRequestDto.getPassword();
@@ -61,11 +63,20 @@ public class UserService {
             throw new GeneralException(Code.INVALID_PASSWORD);
         }
 
-        String accessToken = jwtTokenUtil.createAccessToken(email);
+        TokenDto tokenDto = jwtTokenUtil.generateJwt(email);
 
-        Token token = new Token(accessToken);
+        // TODO: refresh token 저장
 
-        return token;
+        Token token = Token.builder()
+            .user(user.get())
+            .refreshToken(tokenDto.getRefreshToken())
+            .expiredAt(tokenDto.getRefreshTokenExpiresIn())
+            .build();
+
+        // radis로 전환하면 좋을듯
+        tokenRepository.save(token);
+
+        return tokenDto;
     }
 
     public User getLoginUserByEmail(String email){
