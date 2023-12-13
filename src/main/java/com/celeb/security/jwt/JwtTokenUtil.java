@@ -1,5 +1,6 @@
 package com.celeb.security.jwt;
 
+import com.celeb._base.constant.Code;
 import com.celeb.security.CustomUserDetails;
 import com.celeb.security.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
@@ -100,11 +101,11 @@ public class JwtTokenUtil {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            throw new JwtException("만료된 JWT 토큰입니다");
+            throw new JwtException(Code.EXPIRED_TOKEN.getMessage());
         } catch (SignatureException e){
-            throw new JwtException("시그니처 검증에 실패한 JWT 토큰입니다");
+            throw new JwtException(Code.NOT_SIGNATURE_TOKEN.getMessage());
         } catch (MalformedJwtException e){
-            throw new JwtException("손상된 JWT 토큰입니다");
+            throw new JwtException(Code.MALFORMED_TOKEN.getMessage());
         }
     }
 

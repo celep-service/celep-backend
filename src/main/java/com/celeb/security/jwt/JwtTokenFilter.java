@@ -1,5 +1,6 @@
 package com.celeb.security.jwt;
 
+import com.celeb._base.constant.Code;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
         if(!authorizationHeader.startsWith("Bearer ")){
-            throw new JwtException("지원되지 않는 JWT 토큰입니다");
+            throw new JwtException(Code.NOT_SUPPORTED_TOKEN.getMessage());
         }
 
         String accessToken = authorizationHeader.split(" ")[1];
