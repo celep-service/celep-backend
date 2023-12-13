@@ -1,6 +1,7 @@
 package com.celeb.security.jwt;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.exception.GeneralException;
 import com.celeb.security.CustomUserDetails;
 import com.celeb.security.CustomUserDetailsService;
 import com.celeb.user.User;
@@ -85,12 +86,15 @@ public class JwtTokenUtil {
 
     public Authentication getAuthentication(String token) {
         CustomUserDetails userDetails = customUserDetailsService.loadUserByUsername(
-            getEmail(token));
+            getUserId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", Collections.emptyList());
     }
 
-    public String getEmail(String token) {
-        return extractClaims(token).get("email").toString();
+    //    public String getEmail(String token) {
+//        return extractClaims(token).get("email").toString();
+//    }
+    public String getUserId(String token) {
+        return extractClaims(token).getSubject();
     }
 
     public boolean validateToken(String token) {
@@ -106,6 +110,23 @@ public class JwtTokenUtil {
         } catch (MalformedJwtException e) {
             throw new JwtException(Code.MALFORMED_TOKEN.getMessage());
         }
+    }
+
+    public boolean ValidateRefreshToken(String token) {
+        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build()
+                .parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new GeneralException(Code.EXPIRED_TOKEN);
+        } catch (SignatureException e) {
+            throw new GeneralException(Code.NOT_SIGNATURE_TOKEN);
+        } catch (MalformedJwtException e) {
+            throw new GeneralException(Code.MALFORMED_TOKEN);
+        }
+
+
     }
 
     private Claims extractClaims(String token) {

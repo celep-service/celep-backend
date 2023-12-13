@@ -97,7 +97,11 @@ public class UserService {
     }
 
     public TokenDto reissue(ReissueRequestDto reissueRequestDto) {
-        jwtTokenUtil.validateToken(reissueRequestDto.getRefreshToken());
+        // 서비스에서 바디값으로 토큰을 받고 jwtTokenUtil.validateToken을 호출하면 에러 리턴이 제대로 되지 않는다.
+        // validateToken에서는 header값을 캐치하고 filter단에서 에러가 발생하면 처리하는데,
+        // 이미 서비스단으로 넘어왔기에 에러가 발생하더라도 jwt exception과 filter에서 제대로 처리되지 않는 듯 하다.
+        // 여기서는 바디에서 받아서 처리하므로 다른 방법이 필요하다.
+        jwtTokenUtil.ValidateRefreshToken(reissueRequestDto.getRefreshToken());
         Authentication authentication = jwtTokenUtil.getAuthentication(
             reissueRequestDto.getRefreshToken());
         Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
