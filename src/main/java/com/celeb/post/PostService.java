@@ -81,8 +81,16 @@ public class PostService {
     @Transactional
     public EntityIdResponseDto createPost(PostDto postDto) {
 
+        // 옷 찾기, 먼저 찾아야 post index가 낭비되지 않음.
+        List<Clothes> clothesList = clothesRepository.findAllById(postDto.getClothesIdList());
+        if (clothesList.size() != postDto.getClothesIdList().size()) {
+            throw new GeneralException(Code.NOT_FOUND_CLOTHES);
+        }
+
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
 
         // 현재 로그인한 사용자의 id를 가져와서 postDto에 저장
         postDto.setUser(
@@ -93,6 +101,7 @@ public class PostService {
             celebRepository.findById(postDto.getCelebId()).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_CELEB)));
 
+
         Post post = postDto.toEntity();
 
         // 우선 post를 저장해야 id가 생기므로
@@ -101,11 +110,6 @@ public class PostService {
 
         // clothesIdList -> cody에 등록하고 엔티티 리턴 필요
 
-        // 옷 찾기
-        List<Clothes> clothesList = clothesRepository.findAllById(postDto.getClothesIdList());
-        if (clothesList.size() != postDto.getClothesIdList().size()) {
-            throw new GeneralException(Code.NOT_FOUND_CLOTHES);
-        }
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
         savedPost.setCodies(codyList);
