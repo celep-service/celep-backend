@@ -33,7 +33,8 @@ public enum Code {
     NOT_AUTHORIZED_USER(3013, HttpStatus.UNAUTHORIZED, "해당 동작을 수행할 권한이 없습니다"),
     REFRESH_TOKEN_NOT_FOUND(3014, HttpStatus.BAD_REQUEST, "리프레시 토큰이 존재하지 않습니다"),
     INVALID_REFRESH_TOKEN(3015, HttpStatus.BAD_REQUEST, "만료된 리프레시 토큰입니다"),
-
+    NOT_ACCESS_TOKEN(3016, HttpStatus.BAD_REQUEST, "엑세스 토큰이 아닙니다"),
+    UNKNOWN_ERROR(3017, HttpStatus.BAD_REQUEST, "jwt와 관련한 알 수 없는 에러가 발생하였습니다"),
     // Influencer
     NOT_FOUND_CELEB(4001, HttpStatus.NOT_FOUND, "셀럽을 찾을 수 없습니다."),
 

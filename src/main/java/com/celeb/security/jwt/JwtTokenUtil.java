@@ -51,6 +51,7 @@ public class JwtTokenUtil {
             .claim("name", user.getName())
             .claim("role", user.getRole())
             .claim("name", user.getName())
+            .claim("token_type", "access")
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
             .signWith(key, SignatureAlgorithm.HS256)
@@ -62,6 +63,7 @@ public class JwtTokenUtil {
 
         return Jwts.builder()
             .setSubject(user.getId().toString())
+            .claim("token_type", "refresh")
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
             .signWith(key, SignatureAlgorithm.HS256)
@@ -102,6 +104,11 @@ public class JwtTokenUtil {
         try {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build()
                 .parseClaimsJws(token);
+
+            if (!claims.getBody().get("token_type").equals("access")) {
+                throw new JwtException(Code.NOT_ACCESS_TOKEN.getMessage());
+            }
+
             return !claims.getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             throw new JwtException(Code.EXPIRED_TOKEN.getMessage());
@@ -109,6 +116,8 @@ public class JwtTokenUtil {
             throw new JwtException(Code.NOT_SIGNATURE_TOKEN.getMessage());
         } catch (MalformedJwtException e) {
             throw new JwtException(Code.MALFORMED_TOKEN.getMessage());
+        } catch (JwtException e) {
+            throw new JwtException(e.getMessage());
         }
     }
 

@@ -19,19 +19,21 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authorizationHeader == null) {
+        if (authorizationHeader == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        if(!authorizationHeader.startsWith("Bearer ")){
+        if (!authorizationHeader.startsWith("Bearer ")) {
             throw new JwtException(Code.NOT_SUPPORTED_TOKEN.getMessage());
         }
 
         String accessToken = authorizationHeader.split(" ")[1];
-        if(jwtTokenUtil.validateToken(accessToken)){
+        if (jwtTokenUtil.validateToken(accessToken)) {
+
             Authentication authentication = jwtTokenUtil.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
