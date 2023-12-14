@@ -23,6 +23,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        // 로그인, reissue 요청은 토큰 검증을 하지 않는다.
+        String requestUri = request.getRequestURI();
+        if (requestUri.equals("/users/login") || requestUri.equals("/users/reissue")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (authorizationHeader == null) {
             filterChain.doFilter(request, response);
             return;
