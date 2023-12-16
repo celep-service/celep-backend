@@ -2,10 +2,7 @@
 
 ### 프로젝트 설명
 
-**celep**은 셀럽들이 입은 옷 정보를 공유하는 웹 서비스입니다.
-
-Github Copliot은 celep의 뜻을 이렇게 풀어줬네요!<br>
-**C**lothes **E**valuation **L**ike **E**valuation **P**roject!
+**celep**은 셀럽들의 코디와 옷 정보를 공유하는 웹 서비스입니다.
 
 ## 기술 스택
 
@@ -23,3 +20,10 @@ Github Copliot은 celep의 뜻을 이렇게 풀어줬네요!<br>
 ### 인프라 아키텍처
 
 ![celep-architecture](./docs/celep-architecture.png)
+
+### ERD
+
+[dbdiagram 링크](https://dbdocs.io/pch3310/celep_dbdiagram)
+![celep-architecture](./docs/celep_dbdiagram.png)
+
+#### 추가로 레포를 보시고 질문이 있으시거나 개선사항을 확인하셨다면 언제든지 이슈를 남겨주세요!
