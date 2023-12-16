@@ -47,6 +47,8 @@ public class PostDto {
     @Hidden
     private Celeb celeb;
 
+    private Integer bookmarkCount;
+
     // post시 clothesId를 받아서 저장하기 위한 변수
     @NotEmpty(message = "옷 정보를 입력해주세요.")
     @Schema(description = "옷 정보 리스트", example = "[1,2,3]")

@@ -53,10 +53,10 @@ public class PostBookmarkService {
         return PostDto.postListResponse(postsResponse);
     }
 
-    public int getPostBookmarkCount(Post post) {
-        Long count = postBookmarkRepository.countByPost(post);
-        return count.intValue();
-    }
+    //public int getPostBookmarkCount(Post post) {
+    //    Integer count = postBookmarkRepository.countByPostId(post);
+    //    return count.intValue();
+    //}
 
     public boolean isPostBookmarked(Post post, String email){
         Optional<User> user = userRepository.findByEmail(email);
