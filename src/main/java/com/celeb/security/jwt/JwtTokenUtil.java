@@ -72,10 +72,10 @@ public class JwtTokenUtil {
 
     public TokenDto generateJwt(User user) {
         long now = (new Date()).getTime();
-        // long refreshTokenExpireTimeMs = 1000 * 60 * 60 * 24 * 30L; // 30일
-        long refreshTokenExpireTimeMs = 1000 * 60 * 1; // 1분
-        //long accessTokenExpireTimeMs = 4 * 1000 * 60 * 60; // 4시간
-        long accessTokenExpireTimeMs = 1000 * 30 * 1; // 30초
+        long refreshTokenExpireTimeMs = 1000 * 60 * 60 * 24 * 14L; // 14일
+        // long refreshTokenExpireTimeMs = 1000 * 60 * 1; // 1분
+        long accessTokenExpireTimeMs = 1000 * 60 * 30; // 밀리초 * 분 * 시 -> 30분
+        // long accessTokenExpireTimeMs = 1000 * 30 * 1; // 30초
         String accessToken = createAccessToken(user, accessTokenExpireTimeMs);
         String refreshToken = createRefreshToken(user, refreshTokenExpireTimeMs);
 
