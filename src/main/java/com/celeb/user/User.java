@@ -24,6 +24,7 @@ public class User extends BaseTimeEntity {
     private Integer id;
     private String name;
     private String email;
+    private String role;
     private String password;
     private String status;
     private String gender;
@@ -34,12 +35,13 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(Integer id, String name, String email, String password,
-        String status, String gender) {
+        String status, String gender, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.status = status;
         this.gender = gender;
+        this.role = role;
     }
 }
