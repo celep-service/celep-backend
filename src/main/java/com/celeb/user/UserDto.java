@@ -43,6 +43,7 @@ public class UserDto {
             .email(this.email)
             .password(this.password)
             .gender(this.gender)
+            .role("ROLE_USER")
             .build();
     }
 

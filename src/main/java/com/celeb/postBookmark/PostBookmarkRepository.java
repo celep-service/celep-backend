@@ -17,5 +17,5 @@ public interface PostBookmarkRepository extends JpaRepository<PostBookmark, Inte
     @Query("SELECT p FROM PostBookmark pb JOIN pb.post p WHERE pb.user = :user")
     Slice<Post> findPostByMember(@Param("user") User user, Pageable pageable);
 
-    Long countByPost(Post post);
+    Integer countByPostId(Integer postId);
 }

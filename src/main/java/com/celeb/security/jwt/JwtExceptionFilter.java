@@ -40,6 +40,10 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             }
             else if(Code.MALFORMED_TOKEN.getMessage().equals(message)){
                 setResponse(response, Code.MALFORMED_TOKEN);
+            } else if (Code.NOT_ACCESS_TOKEN.getMessage().equals(message)) {
+                setResponse(response, Code.NOT_ACCESS_TOKEN);
+            } else {
+                setResponse(response, Code.UNKNOWN_ERROR);
             }
         }
     }
@@ -47,7 +51,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     private void setResponse(HttpServletResponse response, Code errorCode) throws RuntimeException, IOException {
         response.setStatus(401);
         JSONObject responseJson = new JSONObject();
-
+        responseJson.put("isSuccess", false);
         responseJson.put("code", errorCode.getCode());
         responseJson.put("message", errorCode.getMessage());
 

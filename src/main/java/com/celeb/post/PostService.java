@@ -13,6 +13,7 @@ import com.celeb.cody.Cody;
 import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
 import com.celeb.post.dto.EditPostRequestDto;
+import com.celeb.postBookmark.PostBookmarkRepository;
 import com.celeb.security.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,7 @@ public class PostService {
     private final ClothesRepository clothesRepository;
     private final CodyService codyService;
     private final CelebRepository celebRepository;
+    private final PostBookmarkRepository postBookmarkRepository;
 
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
         Integer userId, GenderEnum gender) {
@@ -73,9 +75,19 @@ public class PostService {
             criteriaBuilder.equal(root.get("status"), StatusEnum.ACTIVE.getStatus())
         );
 
-        Slice<Post> postsResponse = postRepository.findAll(spec, pageable);
+        Slice<Post> posts = postRepository.findAll(spec, pageable);
 
-        return PostDto.postListResponse(postsResponse);
+        // 조회된 post의 id를 이용해서 bookmark 테이블에서 count를 가져와야함
+        // post의 id를 이용해서 bookmark 테이블에서 count를 가져오는 쿼리 필요
+
+        Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
+
+        postsResponse.forEach(postDto -> {
+            int count = postBookmarkRepository.countByPostId(postDto.getId());
+            postDto.setBookmarkCount(count);
+        });
+
+        return postsResponse;
     }
 
     @Transactional
@@ -87,10 +99,8 @@ public class PostService {
             throw new GeneralException(Code.NOT_FOUND_CLOTHES);
         }
 
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-
 
         // 현재 로그인한 사용자의 id를 가져와서 postDto에 저장
         postDto.setUser(
@@ -101,7 +111,6 @@ public class PostService {
             celebRepository.findById(postDto.getCelebId()).orElseThrow(() ->
                 new GeneralException(Code.NOT_FOUND_CELEB)));
 
-
         Post post = postDto.toEntity();
 
         // 우선 post를 저장해야 id가 생기므로
@@ -109,7 +118,6 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         // clothesIdList -> cody에 등록하고 엔티티 리턴 필요
-
 
         List<Cody> codyList = codyService.saveCody(savedPost, clothesList);
         savedPost.setCodies(codyList);
