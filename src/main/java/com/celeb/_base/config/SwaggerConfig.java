@@ -29,13 +29,13 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
 
         Server prodServer = new Server().url("https://service-api.celep.shop");
-        Server testUrl = new Server().url("/");
+        Server nowServer = new Server().url("/");
 
         return new OpenAPI()
             //.components(new Components())
             .addSecurityItem(securityRequirement)
             .components(components)
-            .servers(Arrays.asList(prodServer, testUrl)) // 서버 URL 설정
+            .servers(Arrays.asList(nowServer, prodServer)) // 서버 URL 설정
             .info(apiInfo());
     }
 
