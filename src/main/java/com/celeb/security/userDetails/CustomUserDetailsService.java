@@ -1,4 +1,4 @@
-package com.celeb.security;
+package com.celeb.security.userDetails;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
