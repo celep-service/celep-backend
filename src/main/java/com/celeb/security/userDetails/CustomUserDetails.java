@@ -1,4 +1,4 @@
-package com.celeb.security;
+package com.celeb.security.userDetails;
 
 import com.celeb.user.User;
 import java.util.Collection;

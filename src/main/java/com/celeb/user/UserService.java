@@ -2,11 +2,11 @@ package com.celeb.user;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
-import com.celeb.security.CustomUserDetails;
 import com.celeb.security.jwt.JwtTokenUtil;
 import com.celeb.security.jwt.Token;
 import com.celeb.security.jwt.TokenDto;
 import com.celeb.security.jwt.TokenRepository;
+import com.celeb.security.userDetails.CustomUserDetails;
 import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

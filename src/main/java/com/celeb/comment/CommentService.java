@@ -6,7 +6,7 @@ import com.celeb._base.dto.EntityIdResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.post.Post;
 import com.celeb.post.PostRepository;
-import com.celeb.security.CustomUserDetails;
+import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.User;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;

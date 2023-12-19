@@ -14,7 +14,7 @@ import com.celeb.cody.CodyRepository;
 import com.celeb.cody.CodyService;
 import com.celeb.post.dto.EditPostRequestDto;
 import com.celeb.postBookmark.PostBookmarkRepository;
-import com.celeb.security.CustomUserDetails;
+import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
