@@ -1,4 +1,4 @@
-package com.celeb.security.config;
+package com.celeb._base.config;
 
 import com.celeb.security.jwt.JwtExceptionFilter;
 import com.celeb.security.jwt.JwtTokenFilter;

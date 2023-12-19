@@ -2,8 +2,8 @@ package com.celeb.security.jwt;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
-import com.celeb.security.CustomUserDetails;
-import com.celeb.security.CustomUserDetailsService;
+import com.celeb.security.userDetails.CustomUserDetails;
+import com.celeb.security.userDetails.CustomUserDetailsService;
 import com.celeb.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

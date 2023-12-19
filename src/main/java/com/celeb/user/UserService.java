@@ -2,11 +2,11 @@ package com.celeb.user;
 
 import com.celeb._base.constant.Code;
 import com.celeb._base.exception.GeneralException;
-import com.celeb.security.CustomUserDetails;
 import com.celeb.security.jwt.JwtTokenUtil;
 import com.celeb.security.jwt.Token;
+import com.celeb.security.jwt.TokenCacheRepository;
 import com.celeb.security.jwt.TokenDto;
-import com.celeb.security.jwt.TokenRepository;
+import com.celeb.security.userDetails.CustomUserDetails;
 import io.micrometer.common.util.StringUtils;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final TokenRepository tokenRepository;
+    // token 저장소를 redis로 변경.
+    private final TokenCacheRepository tokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -72,15 +73,15 @@ public class UserService {
         // TODO: refresh token 저장
 
         Token token = Token.builder()
-            .user(user.get())
+            .userId(user.get().getId())
             .refreshToken(tokenDto.getRefreshToken())
             .expiredAt(tokenDto.getRefreshTokenExpiresIn())
             .build();
 
-        // 기존 토큰이 있으면 삭제
-        tokenRepository.findOneByUserId(user.get().getId()).ifPresent(tokenRepository::delete);
+        // 기존 토큰이 있으면 삭제할 필요가 없다.
+//        tokenRepository.findByUserId(user.get().getId())
+//            .ifPresent(tokenRepository::delete);
 
-        // radis로 전환하면 좋을듯
         tokenRepository.save(token);
 
         return tokenDto;
@@ -101,11 +102,17 @@ public class UserService {
         // validateToken에서는 header값을 캐치하고 filter단에서 에러가 발생하면 처리하는데,
         // 이미 서비스단으로 넘어왔기에 에러가 발생하더라도 jwt exception과 filter에서 제대로 처리되지 않는 듯 하다.
         // 여기서는 바디에서 받아서 처리하므로 다른 방법이 필요하다.
-        jwtTokenUtil.ValidateRefreshToken(reissueRequestDto.getRefreshToken());
-        Authentication authentication = jwtTokenUtil.getAuthentication(
-            reissueRequestDto.getRefreshToken());
-        Integer userId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
-        Token jwt = tokenRepository.findOneByUserId(userId)
+        // -> 그래서 아래와 같이 GeneralException을 직접 던지도록 변경.
+
+        // redis로 변경하면서 필요없어진 코드.
+        // refresh 토큰을 바로 repo에서 찾는다.
+        // 그리고 만료기간도 redis에서 자동으로 처리되므로, 만료기간을 체크할 필요가 없다.
+//        jwtTokenUtil.ValidateRefreshToken(reissueRequestDto.getRefreshToken());
+
+        log.info("reissueRequestDto.getRefreshToken() = {}", reissueRequestDto.getRefreshToken());
+        log.info("repo: {}",
+            tokenRepository.findById(reissueRequestDto.getRefreshToken()).toString());
+        Token jwt = tokenRepository.findById(reissueRequestDto.getRefreshToken())
             .orElseThrow(() -> new GeneralException(Code.REFRESH_TOKEN_NOT_FOUND));
         if (!jwt.getRefreshToken().equals(reissueRequestDto.getRefreshToken())) {
             throw new GeneralException(Code.INVALID_REFRESH_TOKEN);
@@ -113,10 +120,12 @@ public class UserService {
 
         tokenRepository.delete(jwt);
 
-        // user을 getAuthentication에서 가져왔는데, 여기서 또 가져오길래 아래와 같이 변경.
+        Authentication authentication = jwtTokenUtil.getAuthentication(
+            reissueRequestDto.getRefreshToken());
         User user = ((CustomUserDetails) authentication.getPrincipal()).getUser();
         TokenDto newJwtDto = jwtTokenUtil.generateJwt(user);
-        Token newJwt = Token.builder().user(user).refreshToken(newJwtDto.getRefreshToken()).build();
+        Token newJwt = Token.builder().userId(user.getId())
+            .refreshToken(newJwtDto.getRefreshToken()).build();
         tokenRepository.save(newJwt);
 
         return newJwtDto;
