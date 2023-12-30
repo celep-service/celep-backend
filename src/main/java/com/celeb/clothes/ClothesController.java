@@ -38,9 +38,10 @@ public class ClothesController {
     public DataResponseDto<Slice<Clothes>> getClothesList(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
+        @Nullable String search,
         @Nullable ClothesCategoryEnum clothesCategory) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return DataResponseDto.of(clothesService.getClothesList(pageable, clothesCategory));
+        return DataResponseDto.of(clothesService.getClothesList(pageable, clothesCategory, search));
     }
 
 }
