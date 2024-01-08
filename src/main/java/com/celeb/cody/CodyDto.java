@@ -1,8 +1,9 @@
 package com.celeb.cody;
 
+import com.celeb.clothes.Clothes;
+import com.celeb.clothes.ClothesDto;
 import com.celeb.post.Post;
 import com.celeb.post.PostDto;
-import com.celeb.clothes.Clothes;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class CodyDto {
     private Integer id;
     private Post post;
     private Clothes clothes;
+    private ClothesDto clothesDto;
 
     private Integer postId;
     private Integer clothesId;
@@ -33,9 +35,19 @@ public class CodyDto {
     }
 
     public static CodyDto codyResponse(Cody cody) {
+        ClothesDto clothesDto = ClothesDto.builder()
+            .id(cody.getClothes().getId())
+            .name(cody.getClothes().getName())
+            .clothesCategory(cody.getClothes().getClothesCategory().toString())
+            .gender(cody.getClothes().getGender())
+            .imageUrl(cody.getClothes().getImageUrl())
+            .sellUrl(cody.getClothes().getSellUrl())
+            .brand(cody.getClothes().getBrand())
+            .build();
+
         return CodyDto.builder()
             .id(cody.getId())
-            .clothes(cody.getClothes())
+            .clothesDto(clothesDto)
             .build();
     }
 

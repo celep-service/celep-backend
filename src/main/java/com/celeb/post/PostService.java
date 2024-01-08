@@ -1,5 +1,6 @@
 package com.celeb.post;
 
+import com.celeb.ClothesBookmark.ClothesBookmarkRepository;
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.constant.StatusEnum;
@@ -16,9 +17,11 @@ import com.celeb.post.dto.EditPostRequestDto;
 import com.celeb.postBookmark.PostBookmarkRepository;
 import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.UserRepository;
+import com.celeb.util.AuthenticationUtil;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final CodyRepository codyRepository;
@@ -39,7 +43,9 @@ public class PostService {
     private final CodyService codyService;
     private final CelebRepository celebRepository;
     private final PostBookmarkRepository postBookmarkRepository;
+    private final ClothesBookmarkRepository clothesBookmarkRepository;
 
+    // TODO: post와 codiesDtoList의 item에 각각 로그인한 유저가 bookmark를 했는지를 나타내는 isBookmarked(boolean)과 같은 필드 추가 요청
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
         Integer userId, GenderEnum gender) {
 
@@ -80,11 +86,41 @@ public class PostService {
         // 조회된 post의 id를 이용해서 bookmark 테이블에서 count를 가져와야함
         // post의 id를 이용해서 bookmark 테이블에서 count를 가져오는 쿼리 필요
 
+        // 로그인되어있다면, 로그인한 유저가 해당 post를 bookmark 했는지 확인
+        //우선 로그인 되어있는지 확인
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
 
+        // 각 post의 bookmarkCount 조회
         postsResponse.forEach(postDto -> {
             int count = postBookmarkRepository.countByPostId(postDto.getId());
+            if (AuthenticationUtil.isAuthenticated(authentication)) {
+                Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+                boolean isBookmarked = postBookmarkRepository.existsByPostIdAndUserId(
+                    postDto.getId(), currentUserId);
+                postDto.setIsBookmarked(isBookmarked);
+            }
             postDto.setBookmarkCount(count);
+        });
+
+        // 각 post의 clothes 마다 bookmarkCount 조회
+        postsResponse.forEach(postDto -> {
+            postDto.getCodiesDtoList().forEach(codyDto -> {
+                long count = clothesBookmarkRepository.countByClothesId(
+                    codyDto.getClothesDto().getId());
+
+                // 로그인 되어있다면, 로그인한 유저가 해당 clothes를 bookmark 했는지 확인
+                if (AuthenticationUtil.isAuthenticated(authentication)) {
+                    Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+                    boolean isBookmarked = clothesBookmarkRepository.existsByClothesIdAndUserId(
+                        codyDto.getClothesDto().getId(), currentUserId);
+                    codyDto.getClothesDto().setIsBookmarked(isBookmarked);
+
+                }
+
+                // codyDto.setBookmarkCount(count);
+                codyDto.getClothesDto().setBookmarkCount(count);
+            });
         });
 
         return postsResponse;
