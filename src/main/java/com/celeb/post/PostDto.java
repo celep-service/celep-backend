@@ -80,6 +80,9 @@ public class PostDto {
     @Schema(description = "성별", example = "MALE")
     private String gender;
 
+    @Hidden
+    private Boolean isBookmarked;
+
     public PostDto() {
 
     }

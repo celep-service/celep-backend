@@ -17,9 +17,11 @@ import com.celeb.post.dto.EditPostRequestDto;
 import com.celeb.postBookmark.PostBookmarkRepository;
 import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.UserRepository;
+import com.celeb.util.AuthenticationUtil;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final CodyRepository codyRepository;
@@ -85,9 +88,18 @@ public class PostService {
 
         Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
 
+        // 로그인되어있다면, 로그인한 유저가 해당 post를 bookmark 했는지 확인
+        //우선 로그인 되어있는지 확인
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 각 post의 bookmarkCount 조회
         postsResponse.forEach(postDto -> {
             int count = postBookmarkRepository.countByPostId(postDto.getId());
+            if (AuthenticationUtil.isAuthenticated(authentication)) {
+                Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+                boolean isBookmarked = postBookmarkRepository.existsByPostIdAndUserId(
+                    postDto.getId(), currentUserId);
+                postDto.setIsBookmarked(isBookmarked);
+            }
             postDto.setBookmarkCount(count);
         });
 
