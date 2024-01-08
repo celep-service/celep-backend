@@ -1,5 +1,6 @@
 package com.celeb.post;
 
+import com.celeb.ClothesBookmark.ClothesBookmarkRepository;
 import com.celeb._base.constant.Code;
 import com.celeb._base.constant.GenderEnum;
 import com.celeb._base.constant.StatusEnum;
@@ -39,7 +40,9 @@ public class PostService {
     private final CodyService codyService;
     private final CelebRepository celebRepository;
     private final PostBookmarkRepository postBookmarkRepository;
+    private final ClothesBookmarkRepository clothesBookmarkRepository;
 
+    // TODO: post와 codiesDtoList의 item에 각각 로그인한 유저가 bookmark를 했는지를 나타내는 isBookmarked(boolean)과 같은 필드 추가 요청
     public Slice<PostDto> getPosts(Pageable pageable, String celebCategory, String search,
         Integer userId, GenderEnum gender) {
 
@@ -82,9 +85,20 @@ public class PostService {
 
         Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
 
+        // 각 post의 bookmarkCount 조회
         postsResponse.forEach(postDto -> {
             int count = postBookmarkRepository.countByPostId(postDto.getId());
             postDto.setBookmarkCount(count);
+        });
+
+        // 각 post의 clothes 마다 bookmarkCount 조회
+        postsResponse.forEach(postDto -> {
+            postDto.getCodiesDtoList().forEach(codyDto -> {
+                long count = clothesBookmarkRepository.countByClothesId(
+                    codyDto.getClothesDto().getId());
+                // codyDto.setBookmarkCount(count);
+                codyDto.getClothesDto().setBookmarkCount(count);
+            });
         });
 
         return postsResponse;

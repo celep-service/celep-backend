@@ -1,6 +1,7 @@
 package com.celeb.clothes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClothesDto {
 
+    @Hidden
+    private Integer id;
     @NotEmpty(message = "옷 이름을 입력해주세요.")
     @Schema(description = "옷 이름", example = "티셔츠")
     private String name;
@@ -32,6 +35,9 @@ public class ClothesDto {
     private String imageUrl;
     @Schema(description = "옷 판매 링크", example = "naver.com")
     private String sellUrl;
+
+    @Hidden
+    private Long bookmarkCount;
 
 
     public Clothes toEntity() {

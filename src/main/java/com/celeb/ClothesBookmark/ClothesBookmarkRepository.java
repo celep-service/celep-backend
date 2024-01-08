@@ -12,10 +12,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClothesBookmarkRepository extends JpaRepository<ClothesBookmark, Integer> {
+
     Optional<ClothesBookmark> findByUserAndClothes(User user, Clothes clothes);
+
     @Query("SELECT c FROM ClothesBookmark cb JOIN cb.clothes c WHERE cb.user = :user")
     Slice<Clothes> findClothesByMember(@Param("user") User user, Pageable pageable);
 
     Long countByClothes(Clothes clothes);
 
+    long countByClothesId(Integer id);
 }
