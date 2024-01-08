@@ -38,6 +38,8 @@ public class ClothesDto {
 
     @Hidden
     private Long bookmarkCount;
+    @Hidden
+    private Boolean isBookmarked;
 
 
     public Clothes toEntity() {

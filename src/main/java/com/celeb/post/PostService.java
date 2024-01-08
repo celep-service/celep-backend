@@ -86,11 +86,11 @@ public class PostService {
         // 조회된 post의 id를 이용해서 bookmark 테이블에서 count를 가져와야함
         // post의 id를 이용해서 bookmark 테이블에서 count를 가져오는 쿼리 필요
 
-        Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
-
         // 로그인되어있다면, 로그인한 유저가 해당 post를 bookmark 했는지 확인
         //우선 로그인 되어있는지 확인
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
+
         // 각 post의 bookmarkCount 조회
         postsResponse.forEach(postDto -> {
             int count = postBookmarkRepository.countByPostId(postDto.getId());
@@ -108,6 +108,16 @@ public class PostService {
             postDto.getCodiesDtoList().forEach(codyDto -> {
                 long count = clothesBookmarkRepository.countByClothesId(
                     codyDto.getClothesDto().getId());
+
+                // 로그인 되어있다면, 로그인한 유저가 해당 clothes를 bookmark 했는지 확인
+                if (AuthenticationUtil.isAuthenticated(authentication)) {
+                    Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+                    boolean isBookmarked = clothesBookmarkRepository.existsByClothesIdAndUserId(
+                        codyDto.getClothesDto().getId(), currentUserId);
+                    codyDto.getClothesDto().setIsBookmarked(isBookmarked);
+
+                }
+
                 // codyDto.setBookmarkCount(count);
                 codyDto.getClothesDto().setBookmarkCount(count);
             });

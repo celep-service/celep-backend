@@ -21,4 +21,6 @@ public interface ClothesBookmarkRepository extends JpaRepository<ClothesBookmark
     Long countByClothes(Clothes clothes);
 
     long countByClothesId(Integer id);
+
+    boolean existsByClothesIdAndUserId(Integer id, Integer currentUserId);
 }
