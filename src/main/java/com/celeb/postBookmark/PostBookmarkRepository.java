@@ -12,10 +12,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostBookmarkRepository extends JpaRepository<PostBookmark, Integer> {
+
     Optional<PostBookmark> findByUserAndPost(User user, Post post);
 
     @Query("SELECT p FROM PostBookmark pb JOIN pb.post p WHERE pb.user = :user")
     Slice<Post> findPostByMember(@Param("user") User user, Pageable pageable);
 
     Integer countByPostId(Integer postId);
+
+    boolean existsByPostIdAndUserId(Integer id, Integer currentUserId);
 }
