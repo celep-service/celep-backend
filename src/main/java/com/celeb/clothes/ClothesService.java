@@ -42,7 +42,7 @@ public class ClothesService {
         if (clothesCategory != null) {
             spec = spec.and((root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("clothesCategory"),
-                    clothesCategory.getClothesCategory())
+                    clothesCategory)
             );
         }
 
