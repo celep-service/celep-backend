@@ -1,6 +1,7 @@
 package com.celeb.ClothesBookmark;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.clothes.Clothes;
 import com.celeb.clothes.ClothesRepository;
@@ -17,34 +18,35 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class ClothesBookmarkService {
+
     private final UserRepository userRepository;
     private final ClothesRepository clothesRepository;
     private final ClothesBookmarkRepository clothesBookmarkRepository;
 
-    public String updateBookmark(String email, int clothes_id){
+    public BookmarkResponseDto updateBookmark(String email, int clothes_id) {
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Clothes> clothes = clothesRepository.findById(clothes_id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
-        if(clothes.isEmpty()){
+        if (clothes.isEmpty()) {
             throw new GeneralException(Code.NOT_FOUND_CLOTHES);
         }
         Optional<ClothesBookmark> clothesBookmark =
             clothesBookmarkRepository.findByUserAndClothes(user.get(), clothes.get());
 
-        if(clothesBookmark.isPresent()){
+        if (clothesBookmark.isPresent()) {
             clothesBookmarkRepository.delete(clothesBookmark.get());
-            return "북마크 해제";
-        } else{
+            return new BookmarkResponseDto(false);
+        } else {
             clothesBookmarkRepository.save(new ClothesBookmark(user.get(), clothes.get()));
-            return "북마크 추가";
+            return new BookmarkResponseDto(true);
         }
     }
 
-    public Slice<Clothes> getClothesBookmark(Pageable pageable, String email){
+    public Slice<Clothes> getClothesBookmark(Pageable pageable, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
 
@@ -56,9 +58,9 @@ public class ClothesBookmarkService {
         return count.intValue();
     }
 
-    public boolean isClothesBookmarked(Clothes clothes, String email){
+    public boolean isClothesBookmarked(Clothes clothes, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
 
