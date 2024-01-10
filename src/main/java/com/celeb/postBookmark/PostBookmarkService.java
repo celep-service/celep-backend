@@ -1,6 +1,7 @@
 package com.celeb.postBookmark;
 
 import com.celeb._base.constant.Code;
+import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.post.Post;
 import com.celeb.post.PostDto;
@@ -18,34 +19,35 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class PostBookmarkService {
+
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostBookmarkRepository postBookmarkRepository;
 
-    public String updateBookmark(String email, int post_id){
+    public BookmarkResponseDto updateBookmark(String email, int post_id) {
         Optional<User> user = userRepository.findByEmail(email);
         Optional<Post> post = postRepository.findById(post_id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
-        if(post.isEmpty()){
+        if (post.isEmpty()) {
             throw new GeneralException(Code.NOT_FOUND_POST);
         }
         Optional<PostBookmark> postBookmark =
             postBookmarkRepository.findByUserAndPost(user.get(), post.get());
 
-        if(postBookmark.isPresent()){
+        if (postBookmark.isPresent()) {
             postBookmarkRepository.delete(postBookmark.get());
-            return "북마크 해제";
-        } else{
+            return new BookmarkResponseDto(false);
+        } else {
             postBookmarkRepository.save(new PostBookmark(user.get(), post.get()));
-            return "북마크 추가";
+            return new BookmarkResponseDto(true);
         }
     }
 
-    public Slice<PostDto> getPostBookmark(Pageable pageable, String email){
+    public Slice<PostDto> getPostBookmark(Pageable pageable, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
         Slice<Post> postsResponse = postBookmarkRepository.findPostByMember(user.get(), pageable);
@@ -58,9 +60,9 @@ public class PostBookmarkService {
     //    return count.intValue();
     //}
 
-    public boolean isPostBookmarked(Post post, String email){
+    public boolean isPostBookmarked(Post post, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
 

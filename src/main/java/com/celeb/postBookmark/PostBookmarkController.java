@@ -1,5 +1,6 @@
 package com.celeb.postBookmark;
 
+import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.dto.DataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,12 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "POST 북마크 관련 API", description = "POST 북마크 관련 API")
 public class PostBookmarkController {
+
     private final PostBookmarkService postBookmarkService;
 
     @Operation(summary = "북마크 업데이트", description = "특정 POST의 북마크 여부에 따라 생성 또는 삭제를 수행합니다.")
     @PostMapping("/{post_id}")
-    public DataResponseDto<String> updateBookmark(@PathVariable int post_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+    public DataResponseDto<BookmarkResponseDto> updateBookmark(@PathVariable int post_id,
+        Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
 
         return DataResponseDto.of(postBookmarkService.updateBookmark(email, post_id));
@@ -37,8 +40,8 @@ public class PostBookmarkController {
     public DataResponseDto<Object> getPostBookmark(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        Authentication authentication){
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
