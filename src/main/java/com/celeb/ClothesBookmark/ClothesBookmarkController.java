@@ -1,5 +1,6 @@
 package com.celeb.ClothesBookmark;
 
+import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.dto.DataResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,11 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "옷 북마크 관련 API", description = "옷 북마크 관련 API")
 public class ClothesBookmarkController {
+
     private final ClothesBookmarkService clothesBookmarkService;
+
     @Operation(summary = "북마크 업데이트", description = "특정 옷의 북마크 여부에 따라 생성 또는 삭제를 수행합니다.")
     @PostMapping("/{clothes_id}")
-    public DataResponseDto<String> updateBookmark(@PathVariable int clothes_id, Authentication authentication) {
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+    public DataResponseDto<BookmarkResponseDto> updateBookmark(@PathVariable int clothes_id,
+        Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
 
         return DataResponseDto.of(clothesBookmarkService.updateBookmark(email, clothes_id));
@@ -36,8 +40,8 @@ public class ClothesBookmarkController {
     public DataResponseDto<Object> getClothesBookmark(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        Authentication authentication){
-        UserDetails userDetails = (UserDetails)authentication.getPrincipal();
+        Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
