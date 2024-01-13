@@ -29,13 +29,15 @@ public class User extends BaseTimeEntity {
     private String status;
     private String gender;
 
+    private String userProfileImage;
+
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
 
     @Builder
     public User(Integer id, String name, String email, String password,
-        String status, String gender, String role) {
+        String status, String gender, String role, String userProfileImage) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -43,5 +45,6 @@ public class User extends BaseTimeEntity {
         this.status = status;
         this.gender = gender;
         this.role = role;
+        this.userProfileImage = userProfileImage;
     }
 }

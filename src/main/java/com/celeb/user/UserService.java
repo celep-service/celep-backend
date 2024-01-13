@@ -12,6 +12,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,7 @@ public class UserService {
         }
 
         User user = userDto.toEntity();
+
         String encode_password = passwordEncoder.encode(user.getPassword());
         user.setPassword(encode_password);
 
@@ -130,5 +132,15 @@ public class UserService {
 
         return newJwtDto;
 
+    }
+
+    public UserDto myInfo(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+
+        User user = userRepository.findById(currentUserId)
+            .orElseThrow(() -> new GeneralException(Code.NOT_FOUND_USER));
+
+        return UserDto.myInfoResponse(user);
     }
 }
