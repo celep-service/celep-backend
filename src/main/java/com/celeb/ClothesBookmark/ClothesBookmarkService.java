@@ -4,7 +4,9 @@ import com.celeb._base.constant.Code;
 import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.exception.GeneralException;
 import com.celeb.clothes.Clothes;
+import com.celeb.clothes.ClothesDto;
 import com.celeb.clothes.ClothesRepository;
+import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.User;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -12,6 +14,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,13 +48,23 @@ public class ClothesBookmarkService {
         }
     }
 
-    public Slice<Clothes> getClothesBookmark(Pageable pageable, String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+    public Slice<ClothesDto> getClothesBookmark(Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        Optional<User> user = userRepository.findById(currentUserId);
         if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
 
-        return clothesBookmarkRepository.findClothesByMember(user.get(), pageable);
+        Slice<Clothes> clothes = clothesBookmarkRepository.findClothesByMember(user.get(), pageable);
+        Slice<ClothesDto> clothesListResponse = ClothesDto.clothesListResponse(clothes);
+
+        clothesListResponse.forEach(clothesDto -> {
+            Long count = clothesBookmarkRepository.countByClothesId(clothesDto.getId());
+            clothesDto.setBookmarkCount(count);
+            clothesDto.setIsBookmarked(true);  //clothesBookmarkRepository에서 select 한 것이므로
+        });
+        return clothesListResponse;
     }
 
     public int getClothesBookmarkCount(Clothes clothes) {
