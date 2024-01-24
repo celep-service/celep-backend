@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,4 +41,9 @@ public class UserController {
         return DataResponseDto.of(userService.reissue(reissueRequestDto));
     }
 
+    @Operation(summary = "마이페이지 조회", description = "프로필, 이름, 성별 정보를 반환합니다")
+    @GetMapping("/me")
+    public DataResponseDto<Object> myInfo(){
+        return DataResponseDto.of(userService.myInfo());
+    }
 }

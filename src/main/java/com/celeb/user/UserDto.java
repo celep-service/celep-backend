@@ -37,12 +37,16 @@ public class UserDto {
     @Schema(description = "성별을 입력해주세요.", example = "MALE")
     private String gender;
 
+    @Schema(description = "사용자 프로필 이미지를 추가해주세요", example = "naver.com")
+    private String userProfileImage;
+
     public User toEntity() {
         return User.builder()
             .name(this.name)
             .email(this.email)
             .password(this.password)
             .gender(this.gender)
+            .userProfileImage(this.userProfileImage)
             .role("ROLE_USER")
             .build();
     }
@@ -53,8 +57,17 @@ public class UserDto {
             .name(user.getName())
             .email(user.getEmail())
             .gender(user.getGender())
+            .userProfileImage(user.getUserProfileImage())
 //            .password(user.getPassword())
             .build();
     }
 
+    public static UserDto myInfoResponse(User user){
+        return UserDto.builder()
+            .id(user.getId())
+            .name(user.getName())
+            .gender(user.getGender())
+            .userProfileImage(user.getUserProfileImage())
+            .build();
+    }
 }
