@@ -64,6 +64,7 @@ public class UserDto {
 
     public static UserDto myInfoResponse(User user){
         return UserDto.builder()
+            .id(user.getId())
             .name(user.getName())
             .gender(user.getGender())
             .userProfileImage(user.getUserProfileImage())
