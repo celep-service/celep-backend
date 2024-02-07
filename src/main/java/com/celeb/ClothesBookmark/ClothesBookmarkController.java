@@ -39,13 +39,11 @@ public class ClothesBookmarkController {
     @GetMapping("")
     public DataResponseDto<Object> getClothesBookmark(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
+        @RequestParam(defaultValue = "10") int size)
+    {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        return DataResponseDto.of(clothesBookmarkService.getClothesBookmark(pageable, email));
+        return DataResponseDto.of(clothesBookmarkService.getClothesBookmark(pageable));
     }
 }

@@ -6,6 +6,7 @@ import com.celeb._base.exception.GeneralException;
 import com.celeb.post.Post;
 import com.celeb.post.PostDto;
 import com.celeb.post.PostRepository;
+import com.celeb.security.userDetails.CustomUserDetails;
 import com.celeb.user.User;
 import com.celeb.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -45,14 +48,24 @@ public class PostBookmarkService {
         }
     }
 
-    public Slice<PostDto> getPostBookmark(Pageable pageable, String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+    public Slice<PostDto> getPostBookmark(Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Integer currentUserId = ((CustomUserDetails) authentication.getPrincipal()).getUserId();
+        Optional<User> user = userRepository.findById(currentUserId);
         if (user.isEmpty()) {
             throw new GeneralException(Code.EMPTY_USER);
         }
-        Slice<Post> postsResponse = postBookmarkRepository.findPostByMember(user.get(), pageable);
 
-        return PostDto.postListResponse(postsResponse);
+        Slice<Post> posts = postBookmarkRepository.findPostByMember(user.get(), pageable);
+        Slice<PostDto> postsResponse = PostDto.postListResponse(posts);
+
+        postsResponse.forEach(postDto -> {
+            int count = postBookmarkRepository.countByPostId(postDto.getId());
+            postDto.setBookmarkCount(count);
+            postDto.setIsBookmarked(true);  //postBookmarkRepository에서 select 한 것이므로
+        });
+
+        return postsResponse;
     }
 
     //public int getPostBookmarkCount(Post post) {
