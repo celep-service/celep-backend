@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
 
 @Data
 @Builder
@@ -53,5 +54,24 @@ public class ClothesDto {
             .build();
     }
 
+    public static Slice<ClothesDto> clothesListResponse(
+        Slice<Clothes> clothes) {
+//        return posts.stream()
+//            .map(PostDto::postResponse)
+//            .toList();
+        return clothes.map(ClothesDto::clothesResponse);
+    }
+
+    public static ClothesDto clothesResponse(Clothes clothes){
+        return ClothesDto.builder()
+            .id(clothes.getId())
+            .name(clothes.getName())
+            .clothesCategory(clothes.getClothesCategory().getClothesCategory())
+            .brand(clothes.getBrand())
+            .gender(clothes.getGender())
+            .imageUrl(clothes.getImageUrl())
+            .sellUrl(clothes.getSellUrl())
+            .build();
+    }
 
 }

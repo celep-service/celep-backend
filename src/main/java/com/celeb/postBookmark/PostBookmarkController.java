@@ -2,11 +2,13 @@ package com.celeb.postBookmark;
 
 import com.celeb._base.dto.BookmarkResponseDto;
 import com.celeb._base.dto.DataResponseDto;
+import com.celeb.post.PostDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,16 +39,13 @@ public class PostBookmarkController {
 
     @Operation(summary = "북마크 목록 조회", description = "사용자의 북마크 목록을 조회합니다")
     @GetMapping("")
-    public DataResponseDto<Object> getPostBookmark(
+    public DataResponseDto<Slice<PostDto>> getPostBookmark(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
+        @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        return DataResponseDto.of(postBookmarkService.getPostBookmark(pageable, email));
+        return DataResponseDto.of(postBookmarkService.getPostBookmark(pageable));
     }
 }
 
